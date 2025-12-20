@@ -12,7 +12,7 @@ namespace app_movie_mvc.Controllers
         //private readonly IEmailService _emailService;
  
         //public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage, IEmailService emailService)
-        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager)
+        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager) // 
         {
             _signInManager = signInManager; // Sirve para manejar la autenticacion de usuarios, cookies, etc
             _userManager = userManager; // Sirve para manejar los usuarios, roles y claims
