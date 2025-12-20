@@ -9,5 +9,8 @@
         public string ImagenUrlPerfil { get; set; }
 
         public List<Favorito>? PeliculasFavoritas { get; set; } // Lista de peliculas favoritas del usuario
+
+
+        //sas
     }
 }
