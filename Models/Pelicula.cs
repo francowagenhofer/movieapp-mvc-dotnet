@@ -12,7 +12,7 @@ namespace app_movie_mvc.Models
         public string Titulo { get; set; }
         
         [DataType(DataType.Date)]
-        public DateTime FechaLanzamientp { get; set; }
+        public DateTime FechaLanzamiento { get; set; }
         
         [Required]
         [Range(1, 400)]
