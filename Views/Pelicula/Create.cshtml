@@ -1,0 +1,72 @@
+﻿@model app_movie_mvc.Models.Pelicula
+
+@{
+    ViewData["Title"] = "Agregar";
+}
+
+<h1>Agregar</h1>
+
+<h4>Pelicula</h4>
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <form asp-action="Create" method="post" class="row g-3">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="col-12">
+                <label asp-for="Titulo" class="form-label"></label>
+                <input asp-for="Titulo" class="form-control" autofocus />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Sinopsis" class="form-label"></label>
+                <textarea asp-for="Sinopsis" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Sinopsis" class="text-danger"></span>
+            </div>
+
+            <div class="col-6">
+                <label asp-for="FechaLanzamiento" class="form-label"></label>
+                <input asp-for="FechaLanzamiento" type="date" class="form-control" />
+                <span asp-validation-for="FechaLanzamiento" class="text-danger"></span>
+            </div>
+
+            <div class="col-6">
+                <label asp-for="MinutosDuracion" class="form-label"></label>
+                <input asp-for="MinutosDuracion" type="number" min="1" step="1" class="form-control" />
+                <span asp-validation-for="MinutosDuracion" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="PosterUrlPortada" class="form-label"></label>
+                <input asp-for="PosterUrlPortada" type="url" class="form-control" />
+                <span asp-validation-for="PosterUrlPortada" class="text-danger"></span>
+            </div>
+
+            <div class="col-6">
+                <label asp-for="GeneroId" class="form-label">Género</label>
+                <select asp-for="GeneroId" class="form-select" asp-items="ViewBag.GeneroId"></select>
+                <span asp-validation-for="GeneroId" class="text-danger"></span>
+            </div>
+
+            <div class="col-6">
+                <label asp-for="PlataformaId" class="form-label">Plataforma</label>
+                <select asp-for="PlataformaId" class="form-select" asp-items="ViewBag.PlataformaId"></select>
+                <span asp-validation-for="PlataformaId" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Agregar película</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+    
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
