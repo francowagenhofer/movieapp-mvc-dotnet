@@ -1,5 +1,7 @@
 using app_movie_mvc.Data;
 using app_movie_mvc.Models;
+using app_movie_mvc.Service;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,17 +28,21 @@ builder.Services.AddIdentityCore<Usuario>(o =>
 
 builder.Services.AddAuthentication(o =>
 {
-    o.DefaultSignInScheme = IdentityConstants.ApplicationScheme; // Sirve para manejar la autenticacion externa (google, facebook, etc)
+    o.DefaultScheme = IdentityConstants.ApplicationScheme; // Sirve para manejar la autenticacion de usuarios con cookies
 })
 .AddIdentityCookies();
 
 builder.Services.ConfigureApplicationCookie(o =>
 {
-    o.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Tiempo de expiracion de la cookie
+    o.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Tiempo de expiracion de la cookie
     o.SlidingExpiration = true; // Renovar la cookie si el usuario esta activo
     o.LoginPath = "/Usuario/Login"; // Redirigir a esta ruta si el usuario no esta autenticado
     o.AccessDeniedPath = "/Usuario/AccessDenied"; // Redirigir a esta ruta si el usuario no tiene permisos
 });
+
+//Servicios de archivos
+builder.Services.AddScoped<ImagenStorage>();
+builder.Services.Configure<FormOptions>(o => { o.MultipartBodyLengthLimit = 2 * 1024 * 1024; }); // Sirve para limitar el tamaño de los archivos subidos a 2 MB
 
 
 var app = builder.Build();
@@ -57,7 +63,6 @@ using (var scope = app.Services.CreateScope())
     }
 
 }
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

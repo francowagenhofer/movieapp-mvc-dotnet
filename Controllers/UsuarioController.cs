@@ -1,4 +1,6 @@
 ﻿using app_movie_mvc.Models;
+using app_movie_mvc.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,15 +10,15 @@ namespace app_movie_mvc.Controllers
     {
         private readonly UserManager<Usuario> _userManager;
         private readonly SignInManager<Usuario> _signInManager;
-        //private readonly ImagenStorage _imagenStorage;
+        private readonly ImagenStorage _imagenStorage;
         //private readonly IEmailService _emailService;
  
         //public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage, IEmailService emailService)
-        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager) // 
+        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage) 
         {
             _signInManager = signInManager; // Sirve para manejar la autenticacion de usuarios, cookies, etc
             _userManager = userManager; // Sirve para manejar los usuarios, roles y claims
-            //_imagenStorage = imagenStorage;
+            _imagenStorage = imagenStorage;
             //_emailService = emailService;
         }
 
@@ -85,16 +87,88 @@ namespace app_movie_mvc.Controllers
             }
 
             return View();
-        }   
-
-        public IActionResult Logout()
-        {
-            return View();
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+
+
         public IActionResult AccessDenied()
         {
             return View();
         }
- 
+
+        [Authorize]
+        public async Task<IActionResult> MiPerfil()
+        {
+            var usuarioActual = await _userManager.GetUserAsync(User);
+
+            var usuarioVM = new MiPerfilViewModel
+            {
+                Nombre = usuarioActual.Nombre,
+                Apellido = usuarioActual.Apellido,
+                Email = usuarioActual.Email,
+                ImagenUrlPerfil = usuarioActual.ImagenUrlPerfil
+            };
+
+            return View(usuarioVM);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MiPerfil(MiPerfilViewModel usuarioVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var usuarioActual = await _userManager.GetUserAsync(User);
+
+                try
+                {
+                    if (usuarioVM.ImagenPerfil is not null && usuarioVM.ImagenPerfil.Length > 0)
+                    {
+                        // opcional: borrar la anterior (si no es placeholder)
+                        if (!string.IsNullOrWhiteSpace(usuarioActual.ImagenUrlPerfil))
+                            await _imagenStorage.DeleteAsync(usuarioActual.ImagenUrlPerfil);
+
+                        var nuevaRuta = await _imagenStorage.SaveAsync(usuarioActual.Id, usuarioVM.ImagenPerfil);
+                        usuarioActual.ImagenUrlPerfil = nuevaRuta;
+                        usuarioVM.ImagenUrlPerfil = nuevaRuta;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View(usuarioVM);
+                }
+
+                usuarioActual.Nombre = usuarioVM.Nombre;
+                usuarioActual.Apellido = usuarioVM.Apellido;
+
+                var resultado = await _userManager.UpdateAsync(usuarioActual);
+
+                if (resultado.Succeeded)
+                {
+                    ViewBag.Mensaje = "Perfil actualizado con éxito.";
+                    return View(usuarioVM);
+                }
+                else
+                {
+                    foreach (var error in resultado.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+            }
+            return View(usuarioVM);
+        }
+
     }
 }
