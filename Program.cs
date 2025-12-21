@@ -44,24 +44,32 @@ builder.Services.ConfigureApplicationCookie(o =>
 builder.Services.AddScoped<ImagenStorage>();
 builder.Services.Configure<FormOptions>(o => { o.MultipartBodyLengthLimit = 2 * 1024 * 1024; }); // Sirve para limitar el tamaño de los archivos subidos a 2 MB
 
+//Servicios de email
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
+//Servicio LLM
+builder.Services.AddScoped<LlmService>();
 
 var app = builder.Build();
 
 // Invocacion de la ejecucion de la siembra de datos en la base de datos
 using (var scope = app.Services.CreateScope())
 {
+    var services = scope.ServiceProvider;
     try
     {
-        var services = scope.ServiceProvider;
         var context = services.GetRequiredService<MovieDbContext>();
-        DbSeeder.Seed(context);
+        var userManager = services.GetRequiredService<UserManager<Usuario>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        await DbSeeder.Seed(context, userManager, roleManager);
     }
     catch (Exception ex)
     {
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        // Log errors or handle them as needed
+        var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred seeding the DB.");
     }
-
 }
 
 // Configure the HTTP request pipeline.

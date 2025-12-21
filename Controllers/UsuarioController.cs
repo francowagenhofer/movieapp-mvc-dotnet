@@ -11,15 +11,14 @@ namespace app_movie_mvc.Controllers
         private readonly UserManager<Usuario> _userManager;
         private readonly SignInManager<Usuario> _signInManager;
         private readonly ImagenStorage _imagenStorage;
-        //private readonly IEmailService _emailService;
- 
-        //public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage, IEmailService emailService)
-        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage) 
+        private readonly IEmailService _emailService;
+
+        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage, IEmailService emailService)
         {
             _signInManager = signInManager; // Sirve para manejar la autenticacion de usuarios, cookies, etc
             _userManager = userManager; // Sirve para manejar los usuarios, roles y claims
             _imagenStorage = imagenStorage;
-            //_emailService = emailService;
+            _emailService = emailService;
         }
 
         public IActionResult Login()
@@ -67,7 +66,7 @@ namespace app_movie_mvc.Controllers
                     Email = usuario.Email,
                     Nombre = usuario.Nombre,
                     Apellido = usuario.Apellido,
-                    ImagenUrlPerfil = "default-profile.png" // Asignar una imagen de perfil por defecto
+                    ImagenUrlPerfil = "/images/default-avatar.png" // ruta de la carpeta images - root // Asignar una imagen de perfil por defecto
                 };
                 var resultado = await _userManager.CreateAsync(nuevoUsuario, usuario.Clave);
                 // Crear el usuario en la base de datos
@@ -75,6 +74,7 @@ namespace app_movie_mvc.Controllers
                 if (resultado.Succeeded) // Si la creacion del usuario fue exitosa, redirigir al login
                 {
                     await _signInManager.SignInAsync(nuevoUsuario, isPersistent: false); // Iniciar sesion automaticamente despues del registro
+                    await _emailService.SendAsync(nuevoUsuario.Email, "Bienvenido a App Movie", "<h1>Gracias por registrarte en App Movie!</h1><p>Esperamos que disfrutes de nuestra plataforma.</p>");
                     return RedirectToAction("Index", "Home"); // Redirigir a la pagina principal despues del registro
                 }
                 else // Si hubo errores, mostrarlos en la vista
@@ -97,8 +97,6 @@ namespace app_movie_mvc.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
-
 
         public IActionResult AccessDenied()
         {

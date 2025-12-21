@@ -1,10 +1,10 @@
 using app_movie_mvc.Data;
 using app_movie_mvc.Models;
+using app_movie_mvc.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Security.Claims;
 
 namespace app_movie_mvc.Controllers
@@ -14,17 +14,19 @@ namespace app_movie_mvc.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly MovieDbContext _context;
         private const int PageSize = 8;
-        //private readonly LlmService _llmService; // Servicio de LLM inyectado // Sirve para futuras funcionalidades relacionadas con LLM (large language models)
+        private readonly LlmService _llmService;
 
-        public HomeController(ILogger<HomeController> logger, MovieDbContext context)
+        public HomeController(ILogger<HomeController> logger, MovieDbContext context, LlmService llmService)
         {
             _logger = logger;
             _context = context;
+            _llmService = llmService;
         }
 
-        // Vista principal con paginación, búsqueda y filtro por género
         public async Task<IActionResult> Index(int pagina = 1, string txtBusqueda = "", int generoId = 0)
         {
+            if (pagina < 1) pagina = 1;
+
             var consulta = _context.Peliculas.AsQueryable();
             if (!string.IsNullOrEmpty(txtBusqueda))
             {
@@ -51,7 +53,7 @@ namespace app_movie_mvc.Controllers
             ViewBag.TotalPeliculas = totalPeliculas;
             ViewBag.TxtBusqueda = txtBusqueda;
 
-            var generos = await _context.Generos.OrderBy(g => g.Descripcion).ToListAsync(); // Sirve para obtener la lista de géneros desde la base de datos
+            var generos = await _context.Generos.OrderBy(g => g.Descripcion).ToListAsync();
             generos.Insert(0, new Genero { Id = 0, Descripcion = "Género" });
             ViewBag.GeneroId = new SelectList(
                 generos,
@@ -63,16 +65,28 @@ namespace app_movie_mvc.Controllers
             return View(peliculas);
         }
 
-        // Vista de detalles de una película
         public async Task<IActionResult> Details(int Id)
         {
             var pelicula = await _context.Peliculas
                 .Include(p => p.Genero)
+                .Include(p => p.ListaReviews)
+                .ThenInclude(r => r.Usuario)
                 .FirstOrDefaultAsync(p => p.Id == Id);
+
+            if (pelicula == null)
+            {
+                return NotFound(); // o return View("NotFound"); según UX
+            }
+
+            ViewBag.UserReview = false;
+            if (User?.Identity?.IsAuthenticated == true && pelicula.ListaReviews != null)
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                ViewBag.UserReview = pelicula.ListaReviews.Any(r => r.UsuarioId == userId);
+            }
 
             return View(pelicula);
         }
-
 
         public IActionResult Privacy()
         {
@@ -83,6 +97,35 @@ namespace app_movie_mvc.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Spoiler(string titulo)
+        {
+            try
+            {
+                var spoiler = await _llmService.ObtenerSpoilerAsync(titulo);
+                return Json(new { success = true, data = spoiler });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Resumen(string titulo)
+        {
+            try
+            {
+                var resumen = await _llmService.ObtenerResumenAsync(titulo);
+                return Json(new { success = true, data = resumen });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
     }
 }
