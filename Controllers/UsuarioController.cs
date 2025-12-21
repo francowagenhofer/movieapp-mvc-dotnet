@@ -19,15 +19,32 @@ namespace app_movie_mvc.Controllers
             //_imagenStorage = imagenStorage;
             //_emailService = emailService;
         }
+
         public IActionResult Login()
         {
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Login(string user)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel usuario)
         {
-            return View();
+            if(ModelState.IsValid)
+            {
+                // Intentar iniciar sesion con el email y clave proporcionados
+                var resultado = await _signInManager.PasswordSignInAsync(usuario.Email, usuario.Clave, usuario.Recordarme, lockoutOnFailure: false);
+                
+                if (resultado.Succeeded) // Si el inicio de sesion fue exitoso, redirigir a la pagina principal
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else // Si hubo un error, mostrar mensaje en la vista
+                {
+                    ModelState.AddModelError(string.Empty, resultado.ToString());
+                }
+            }
+
+            return View(usuario);
         }
 
         public IActionResult Registro()
@@ -56,7 +73,7 @@ namespace app_movie_mvc.Controllers
                 if (resultado.Succeeded) // Si la creacion del usuario fue exitosa, redirigir al login
                 {
                     await _signInManager.SignInAsync(nuevoUsuario, isPersistent: false); // Iniciar sesion automaticamente despues del registro
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home"); // Redirigir a la pagina principal despues del registro
                 }
                 else // Si hubo errores, mostrarlos en la vista
                 {

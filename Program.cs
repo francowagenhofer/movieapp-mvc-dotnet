@@ -15,7 +15,7 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
 // Configuracion Identity 
 builder.Services.AddIdentityCore<Usuario>(o =>
 {
-    o.SignIn.RequireConfirmedAccount = true;
+    o.SignIn.RequireConfirmedAccount = false;
     o.Password.RequireNonAlphanumeric = false;
     o.Password.RequiredLength = 4;
     o.Password.RequireUppercase = false;
