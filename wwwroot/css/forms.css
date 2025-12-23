@@ -1,0 +1,16 @@
+﻿/* =========================
+   Forms
+   ========================= */
+
+.form-control, .form-select {
+    border-radius: .45rem;
+}
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: none;
+        border-color: rgba(13,110,253,.55);
+    }
+
+label.form-label {
+    color: rgba(255,255,255,.75);
+}

@@ -14,16 +14,17 @@ namespace app_movie_mvc.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly MovieDbContext _context;
         private const int PageSize = 8;
-        private readonly LlmService _llmService;
+        //private readonly LlmService _llmService;
 
-        public HomeController(ILogger<HomeController> logger, MovieDbContext context, LlmService llmService)
+        //public HomeController(ILogger<HomeController> logger, MovieDbContext context, LlmService llmService)
+        public HomeController(ILogger<HomeController> logger, MovieDbContext context)
         {
             _logger = logger;
             _context = context;
-            _llmService = llmService;
+            //_llmService = llmService;
         }
 
-        public async Task<IActionResult> Index(int pagina = 1, string txtBusqueda = "", int generoId = 0)
+        public async Task<IActionResult> Index(int pagina = 1, string txtBusqueda = "", int generoId = 0, int plataformaId = 0, int minRating = 0)
         {
             if (pagina < 1) pagina = 1;
 
@@ -37,6 +38,23 @@ namespace app_movie_mvc.Controllers
             {
                 consulta = consulta.Where(p => p.GeneroId == generoId);
             }
+
+            if (plataformaId > 0)
+            {
+                consulta = consulta.Where(p => p.PlataformaId == plataformaId);
+            }
+
+            if (minRating > 0)
+            {
+                consulta = consulta.Where(p =>
+                    _context.Reviews
+                        .Where(r => r.PeliculaId == p.Id)
+                        .Select(r => (double?)r.Rating)
+                        .Average() >= minRating
+                );
+            }
+
+
 
             var totalPeliculas = await consulta.CountAsync();
             var totalPaginas = (int)Math.Ceiling(totalPeliculas / (double)PageSize);
@@ -52,6 +70,8 @@ namespace app_movie_mvc.Controllers
             ViewBag.TotalPaginas = totalPaginas;
             ViewBag.TotalPeliculas = totalPeliculas;
             ViewBag.TxtBusqueda = txtBusqueda;
+            ViewBag.PlataformaSeleccionada = plataformaId;
+            ViewBag.MinRatingSeleccionado = minRating;
 
             var generos = await _context.Generos.OrderBy(g => g.Descripcion).ToListAsync();
             generos.Insert(0, new Genero { Id = 0, Descripcion = "Género" });
@@ -61,6 +81,24 @@ namespace app_movie_mvc.Controllers
                 "Descripcion",
                 generoId
             );
+
+            var plataformas = await _context.Plataformas.OrderBy(p => p.Nombre).ToListAsync();
+            plataformas.Insert(0, new Plataforma { Id = 0, Nombre = "Plataforma" });
+
+            ViewBag.PlataformaId = new SelectList(plataformas, "Id", "Nombre", plataformaId);
+
+            var ratings = new List<SelectListItem>
+            {
+                new("Calificación", "0"),
+                new("5", "5"),
+                new("4 o más", "4"),
+                new("3 o más", "3"),
+                new("2 o más", "2"),
+                new("1 o más", "1"),
+            };
+            ViewBag.MinRating = new SelectList(ratings, "Value", "Text", minRating.ToString());
+
+
 
             return View(peliculas);
         }
@@ -99,33 +137,33 @@ namespace app_movie_mvc.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Spoiler(string titulo)
-        {
-            try
-            {
-                var spoiler = await _llmService.ObtenerSpoilerAsync(titulo);
-                return Json(new { success = true, data = spoiler });
+        //[HttpGet]
+        //public async Task<IActionResult> Spoiler(string titulo)
+        //{
+        //    try
+        //    {
+        //        var spoiler = await _llmService.ObtenerSpoilerAsync(titulo);
+        //        return Json(new { success = true, data = spoiler });
 
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> Resumen(string titulo)
-        {
-            try
-            {
-                var resumen = await _llmService.ObtenerResumenAsync(titulo);
-                return Json(new { success = true, data = resumen });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> Resumen(string titulo)
+        //{
+        //    try
+        //    {
+        //        var resumen = await _llmService.ObtenerResumenAsync(titulo);
+        //        return Json(new { success = true, data = resumen });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
     }
 }

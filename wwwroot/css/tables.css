@@ -1,0 +1,55 @@
+﻿/* =========================
+   Tables / DataTables tweaks
+   ========================= */
+
+.table {
+    border-color: rgba(255,255,255,.08);
+}
+
+    .table thead th {
+        color: rgba(255,255,255,.75);
+        font-weight: 600;
+    }
+
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    border-radius: .45rem;
+}
+
+.app-card {
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(33,37,41,.55);
+    border-radius: .45rem;
+    padding: 1rem; 
+}
+
+.app-table thead th {
+    font-size: .85rem;
+    letter-spacing: .2px;
+    color: rgba(255,255,255,.70);
+    border-color: rgba(255,255,255,.08);
+}
+
+.app-table tbody td {
+    border-color: rgba(255,255,255,.06);
+}
+
+.poster-thumb {
+    width: 42px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: .35rem;
+    border: 1px solid rgba(255,255,255,.10);
+}
+
+
+/* Logos de plataformas */
+.logo-thumb {
+    width: 65px; /* ancho consistente */
+    height: 45px; /* altura baja, tipo navbar */
+    object-fit: contain; /* NO recorta */
+    padding: .15rem; /* aire visual */
+    border-radius: .3rem;
+    /*background: rgba(255,255,255,.04);*/
+    /*border: 1px solid rgba(255,255,255,.08);*/
+}

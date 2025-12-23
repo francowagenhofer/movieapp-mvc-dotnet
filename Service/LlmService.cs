@@ -2,6 +2,7 @@
 
 namespace app_movie_mvc.Service
 {
+    // Falta terminar de configurar este servicio para ser utilizado en la aplicacion.
     public class LlmService
     {
         private readonly string _apiKey;

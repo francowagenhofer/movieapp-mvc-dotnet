@@ -1,0 +1,114 @@
+﻿/* =========================
+   Layout base (sobrio/pro)
+   ========================= */
+
+:root {
+    --app-border: rgba(255,255,255,.08);
+    --app-text-dim: rgba(255,255,255,.72);
+    --app-text: rgba(255,255,255,.92);
+    --app-surface: rgba(33,37,41,.92); /* parecido a bg-dark pero menos plano */
+    --app-surface-2: rgba(33,37,41,.75);
+}
+
+.app-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== NAVBAR ===== */
+.app-navbar-wrapper {
+    background: rgba(33, 37, 41, .92);
+    border-bottom: 1px solid var(--app-border);
+    /* sobrio: blur leve, sin sombras pesadas */
+    backdrop-filter: blur(6px);
+}
+
+.app-navbar {
+    padding: .65rem 0;
+    background: transparent !important;
+}
+
+.app-brand {
+    text-decoration: none;
+}
+
+    .app-brand:hover {
+        opacity: .95;
+    }
+
+.app-brand-icon {
+    color: #0d6efd;
+}
+
+.app-brand-text {
+    font-weight: 600;
+    letter-spacing: .2px;
+    color: var(--app-text);
+}
+
+/* Links */
+.app-nav-link {
+    color: var(--app-text-dim) !important;
+    font-weight: 500;
+    padding: .5rem .75rem !important;
+    border-radius: .45rem;
+    transition: background-color .12s ease, color .12s ease;
+}
+
+    .app-nav-link:hover {
+        color: var(--app-text) !important;
+        background: rgba(255,255,255,.06);
+    }
+
+    .app-nav-link.active {
+        color: var(--app-text) !important;
+        background: rgba(255,255,255,.08);
+    }
+
+/* User name */
+.app-user-name {
+    color: rgba(255,255,255,.70);
+    font-size: .9rem;
+    padding-right: .25rem;
+}
+
+/* Main */
+.app-main {
+    padding-top: 1rem;
+    padding-bottom: 1.25rem;
+}
+
+/* ===== FOOTER ===== */
+.app-footer {
+    background: rgba(33, 37, 41, .70);
+    border-top: 1px solid var(--app-border);
+}
+
+.app-footer-text {
+    color: rgba(255,255,255,.65);
+}
+
+.app-footer-link {
+    color: rgba(255,255,255,.70);
+    text-decoration: none;
+    transition: color .12s ease;
+}
+
+    .app-footer-link:hover {
+        color: rgba(255,255,255,.92);
+        text-decoration: none;
+    }
+
+/* Responsive niceties */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        margin-top: .75rem;
+        padding-top: .75rem;
+        border-top: 1px solid var(--app-border);
+    }
+
+    .app-nav-link {
+        padding: .6rem .5rem !important;
+    }
+}
