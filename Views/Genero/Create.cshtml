@@ -4,13 +4,10 @@
     ViewData["Title"] = "Agregar";
 }
 
-<h1>Agregar</h1>
-
-<h4>Género</h4>
-<hr />
+<h2 style="text-align:center; margin-bottom:2rem">Nuevo Género</h2>
 
 <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6">
+    <div class="col-12 col-md-8 col-lg-6 app-card">
         <form asp-action="Create" method="post" class="row g-3">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -22,8 +19,8 @@
             </div>
 
             <div class="col-12 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Agregar género</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-outline-primary">Guardar Género</button>
+                <a asp-action="Index" class="btn btn-outline-danger">Cancelar</a>
             </div>
         </form>
     </div>

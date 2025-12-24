@@ -18,9 +18,8 @@
 
 /* ===== NAVBAR ===== */
 .app-navbar-wrapper {
-    background: rgba(33, 37, 41, .92);
+    background: radial-gradient(1200px 500px at 50% 0%, rgba(13,110,253,.10), rgba(0,0,0,0));
     border-bottom: 1px solid var(--app-border);
-    /* sobrio: blur leve, sin sombras pesadas */
     backdrop-filter: blur(6px);
 }
 
@@ -75,30 +74,35 @@
 
 /* Main */
 .app-main {
-    padding-top: 1rem;
-    padding-bottom: 1.25rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 /* ===== FOOTER ===== */
 .app-footer {
-    background: rgba(33, 37, 41, .70);
     border-top: 1px solid var(--app-border);
+    margin-top: auto;
+    padding: 1.5rem 0 1.25rem;
+    background: radial-gradient( 1000px 320px at 50% 0%, rgba(13,110,253,.06), rgba(33,37,41,.92) );
 }
 
 .app-footer-text {
     color: rgba(255,255,255,.65);
+    font-size: .85rem;
 }
 
 .app-footer-link {
     color: rgba(255,255,255,.70);
     text-decoration: none;
     transition: color .12s ease;
+    font-size: .85rem;
 }
 
     .app-footer-link:hover {
         color: rgba(255,255,255,.92);
         text-decoration: none;
     }
+
 
 /* Responsive niceties */
 @media (max-width: 991px) {
@@ -110,5 +114,13 @@
 
     .app-nav-link {
         padding: .6rem .5rem !important;
+    }
+}
+
+/* Extra spacing on larger screens */
+@media (min-width: 992px) {
+    .app-main {
+        padding-top: 2.5rem;
+        padding-bottom: 2.5rem;
     }
 }

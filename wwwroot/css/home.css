@@ -69,13 +69,14 @@
 .home-page .card {
     border-radius: .40rem !important;
     overflow: hidden;
-    background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.06) 0%, rgba(255,255,255,.02) 35%, rgba(0,0,0,.65) 100%);
+    /*background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.06) 0%, rgba(255,255,255,.02) 35%, rgba(0,0,0,.65) 100%);*/    
+    background: radial-gradient( 1000px 320px at 50% 0%, rgba(13,110,253,.06), rgba(33,37,41,.92) );
+    
     border: 1px solid rgba(255,255,255,.08);
     box-shadow: 0 10px 24px rgba(0,0,0,.35);
     transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
 }
 
-    /* Hover sobrio: sube apenas y suma sombra */
     .home-page .card:hover {
         transform: translateY(-3px);
         border-color: rgba(255,255,255,.14);

@@ -6,19 +6,20 @@
 
 <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
     <div>
-        <h1 class="h3 mb-1">Películas</h1>
+        <h1 class="h3 mb-1">Gestión de Películas</h1>
         <div class="text-white-50 small">Administrá el catálogo: crear, editar, ver detalles o eliminar.</div>
     </div>
 
     <div class="d-flex gap-2">
-        <a asp-action="Create" class="btn btn-sm app-btn app-btn-primary">
-            Agregar pelicula
+        @* <a asp-action="Create" class="btn btn-sm app-btn btn-outline-success"> *@
+        <a asp-action="Create" class="btn app-btn btn-outline-primary">
+            + Agregar Pelicula
         </a>
     </div>
 </div>
 
 <div class="card app-card">
-    <div class="card-body p-0">
+    <div class="card-body p-0 ">
         <div class="table-responsive">
             <table id="peliculasTable" class="table table-dark table-hover align-middle mb-0 app-table">
                 <thead>

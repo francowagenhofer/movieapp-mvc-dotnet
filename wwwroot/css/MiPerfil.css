@@ -1,0 +1,39 @@
+﻿/* Profile (MiPerfil) */
+.profile-img-container {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    margin: 0 auto;
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid rgba(13,110,253,.35);
+}
+
+.profile-edit-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+
+    .profile-edit-btn .material-symbols-outlined {
+        font-size: 18px;
+    }
+
+    .profile-edit-btn:hover {
+        transform: scale(1.05);
+    }

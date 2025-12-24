@@ -28,8 +28,8 @@
         <form asp-action="Delete" method="post" class="d-flex gap-2">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Id" />
-            <button type="submit" class="btn btn-danger">Eliminar</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+            <a asp-action="Index" class="btn btn-outline-light">Cancelar</a>
         </form>
     </div>
 </div>

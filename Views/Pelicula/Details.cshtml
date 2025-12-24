@@ -1,60 +1,43 @@
 ﻿@model app_movie_mvc.Models.Pelicula
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles";
 }
 
-<h1>Details</h1>
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
+    <div>
+        <h1 class="h3 mb-1">Película</h1>
+        <div class="text-white-50 small">Detalles de la película seleccionada.</div>
+    </div>
 
-<div>
-    <h4>Pelicula</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Titulo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Titulo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaLanzamiento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaLanzamiento)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MinutosDuracion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MinutosDuracion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Sinopsis)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Sinopsis)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PosterUrlPortada)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PosterUrlPortada)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genero)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genero.Descripcion)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Plataforma)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Plataforma.Nombre)
-        </dd>
-    </dl>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm app-btn btn-outline-primary">Editar</a>
+        <a asp-action="Index" class="btn btn-sm app-btn app-btn-ghost">Volver</a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="card app-card">
+    <div class="card-body">
+        <div class="row g-3 align-items-start">
+            <div class="col-12 col-md-3 text-md-center">
+                <img src="@Model.PosterUrlPortada" alt="@Model.Titulo" class="poster-detail" />
+            </div>
+            <div class="col-12 col-md-9">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 col-6">Título</dt>
+                    <dd class="col-sm-8 col-6">@Html.DisplayFor(model => model.Titulo)</dd>
+                    <dt class="col-sm-4 col-6">Fecha de lanzamiento</dt>
+                    <dd class="col-sm-8 col-6">@Html.DisplayFor(model => model.FechaLanzamiento)</dd>
+                    <dt class="col-sm-4 col-6">Duración (min)</dt>
+                    <dd class="col-sm-8 col-6">@Html.DisplayFor(model => model.MinutosDuracion)</dd>
+                    <dt class="col-sm-4 col-6">Sinopsis</dt>
+                    <dd class="col-sm-8 col-6">@Html.DisplayFor(model => model.Sinopsis)</dd>
+                    <dt class="col-sm-4 col-6">Género</dt>
+                    <dd class="col-sm-8 col-6">@Html.DisplayFor(model => model.Genero.Descripcion)</dd>
+                    <dt class="col-sm-4 col-6">Plataforma</dt>
+                    <dd class="col-sm-8 col-6">@Html.DisplayFor(model => model.Plataforma.Nombre)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
 </div>

@@ -14,8 +14,10 @@ html {
 }
 
 body {
-    margin: 0; /* sacamos el margin-bottom viejo */
+    background: radial-gradient( 1200px 500px at 50% 0%, rgba(13,110,253,.08), rgba(0,0,0,.75) );
+    margin: 0;
 }
+
 
 /* Focus accesible pero más sobrio que el default */
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus,

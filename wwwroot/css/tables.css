@@ -7,12 +7,14 @@
 }
 
     .table thead th {
+
         color: rgba(255,255,255,.75);
         font-weight: 600;
     }
 
 .dataTables_wrapper .dataTables_filter input,
 .dataTables_wrapper .dataTables_length select {
+
     border-radius: .45rem;
 }
 
@@ -20,7 +22,8 @@
     border: 1px solid rgba(255,255,255,.08);
     background: rgba(33,37,41,.55);
     border-radius: .45rem;
-    padding: 1rem; 
+    padding: 1.5rem; 
+
 }
 
 .app-table thead th {
@@ -28,10 +31,13 @@
     letter-spacing: .2px;
     color: rgba(255,255,255,.70);
     border-color: rgba(255,255,255,.08);
+    background: transparent;
 }
 
 .app-table tbody td {
     border-color: rgba(255,255,255,.06);
+    background: transparent;
+
 }
 
 .poster-thumb {
@@ -42,14 +48,41 @@
     border: 1px solid rgba(255,255,255,.10);
 }
 
-
-/* Logos de plataformas */
 .logo-thumb {
-    width: 65px; /* ancho consistente */
-    height: 45px; /* altura baja, tipo navbar */
-    object-fit: contain; /* NO recorta */
-    padding: .15rem; /* aire visual */
-    border-radius: .3rem;
-    /*background: rgba(255,255,255,.04);*/
-    /*border: 1px solid rgba(255,255,255,.08);*/
+    width: 6rem;
+    height: 3rem;
+}
+
+/* Poster grande para vistas de Detalles/Eliminar */
+.poster-detail {
+    width: 160px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: .45rem;
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+@media (max-width: 576px) {
+    .poster-detail {
+        width: 120px;
+        height: 165px;
+    }
+}
+
+/* Logo grande para vistas de Detalles/Eliminar o formularios */
+.logo-detail {
+    width: 160px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: .45rem;
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+@media (max-width: 576px) {
+    .logo-detail {
+        width: 140px;
+        height: 105px;
+    }
 }

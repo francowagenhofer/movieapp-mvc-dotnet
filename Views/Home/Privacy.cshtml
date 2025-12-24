@@ -1,6 +1,83 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Política de Privacidad";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container py-4">
+    <div class="mb-4">
+        <h1 class="h3 mb-1">Política de Privacidad</h1>
+        <p class="text-white-50 mb-0">
+            Última actualización: @DateTime.Now.Year
+        </p>
+    </div>
+
+    <div class="card app-card">
+        <div class="card-body">
+
+            <section class="mb-4">
+                <h2 class="h5">1. Introducción</h2>
+                <p class="text-white-75">
+                    MovieApp es una aplicación desarrollada con ASP.NET Core MVC cuyo objetivo es permitir a los usuarios
+                    explorar películas, gestionar reseñas y administrar información relacionada con el catálogo.
+                    La privacidad de los usuarios es importante y esta política describe cómo se maneja la información.
+                </p>
+            </section>
+
+            <section class="mb-4">
+                <h2 class="h5">2. Información recopilada</h2>
+                <p class="text-white-75">
+                    La aplicación puede recopilar la siguiente información:
+                </p>
+                <ul class="text-white-75">
+                    <li>Datos básicos de autenticación (usuario, correo electrónico).</li>
+                    <li>Reseñas y calificaciones ingresadas por los usuarios.</li>
+                    <li>Preferencias de uso dentro de la aplicación.</li>
+                </ul>
+            </section>
+
+            <section class="mb-4">
+                <h2 class="h5">3. Uso de la información</h2>
+                <p class="text-white-75">
+                    La información recopilada se utiliza exclusivamente para:
+                </p>
+                <ul class="text-white-75">
+                    <li>Permitir el funcionamiento correcto de la aplicación.</li>
+                    <li>Asociar reseñas y calificaciones a los usuarios correspondientes.</li>
+                    <li>Mejorar la experiencia de uso y el contenido mostrado.</li>
+                </ul>
+            </section>
+
+            <section class="mb-4">
+                <h2 class="h5">4. Almacenamiento y seguridad</h2>
+                <p class="text-white-75">
+                    Los datos se almacenan en una base de datos protegida y se aplican medidas básicas de seguridad
+                    para evitar accesos no autorizados. Sin embargo, ningún sistema es completamente infalible.
+                </p>
+            </section>
+
+            <section class="mb-4">
+                <h2 class="h5">5. Compartición de datos</h2>
+                <p class="text-white-75">
+                    MovieApp no comparte información personal con terceros.
+                    Los datos se utilizan únicamente dentro del contexto de la aplicación.
+                </p>
+            </section>
+
+            <section class="mb-4">
+                <h2 class="h5">6. Derechos del usuario</h2>
+                <p class="text-white-75">
+                    Los usuarios pueden modificar o eliminar sus reseñas y, según corresponda,
+                    solicitar la eliminación de su cuenta.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="h5">7. Cambios en esta política</h2>
+                <p class="text-white-75 mb-0">
+                    Esta política puede actualizarse para reflejar cambios en la aplicación.
+                    Se recomienda revisarla periódicamente.
+                </p>
+            </section>
+
+        </div>
+    </div>
+</div>

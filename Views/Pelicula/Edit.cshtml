@@ -1,64 +1,87 @@
 ﻿@model app_movie_mvc.Models.Pelicula
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
 }
 
-<h1>Edit</h1>
+<h2 style="text-align:center; margin-bottom:2rem">Editar Película</h2>
 
-<h4>Pelicula</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<div class="row justify-content-center g-4">
+    <div class="col-12 col-lg-6 app-card">
+        <form asp-action="Edit" method="post" class="row g-3">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Titulo" class="control-label"></label>
-                <input asp-for="Titulo" class="form-control" />
+
+            <div class="col-12">
+                <label asp-for="Titulo" class="form-label"></label>
+                <input asp-for="Titulo" class="form-control" autofocus />
                 <span asp-validation-for="Titulo" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FechaLanzamiento" class="control-label"></label>
-                <input asp-for="FechaLanzamiento" class="form-control" />
+
+            <div class="col-6">
+                <label asp-for="FechaLanzamiento" class="form-label"></label>
+                <input asp-for="FechaLanzamiento" type="date" class="form-control" />
                 <span asp-validation-for="FechaLanzamiento" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="MinutosDuracion" class="control-label"></label>
-                <input asp-for="MinutosDuracion" class="form-control" />
+
+            <div class="col-6">
+                <label asp-for="MinutosDuracion" class="form-label"></label>
+                <input asp-for="MinutosDuracion" type="number" min="1" step="1" class="form-control" />
                 <span asp-validation-for="MinutosDuracion" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Sinopsis" class="control-label"></label>
-                <input asp-for="Sinopsis" class="form-control" />
-                <span asp-validation-for="Sinopsis" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PosterUrlPortada" class="control-label"></label>
-                <input asp-for="PosterUrlPortada" class="form-control" />
+
+            <div class="col-12">
+                <label asp-for="PosterUrlPortada" class="form-label"></label>
+                <input asp-for="PosterUrlPortada" type="url" class="form-control" oninput="updatePosterPreview(this, 'posterPreviewEdit')" />
                 <span asp-validation-for="PosterUrlPortada" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="GeneroId" class="control-label"></label>
-                <select asp-for="GeneroId" class="form-control" asp-items="ViewBag.GeneroId"></select>
+
+            <div class="col-12">
+                <label asp-for="Sinopsis" class="form-label"></label>
+                <textarea asp-for="Sinopsis" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Sinopsis" class="text-danger"></span>
+            </div>
+
+            <div class="col-6">
+                <label asp-for="GeneroId" class="form-label">Género</label>
+                <select asp-for="GeneroId" class="form-select" asp-items="ViewBag.GeneroId"></select>
                 <span asp-validation-for="GeneroId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PlataformaId" class="control-label"></label>
-                <select asp-for="PlataformaId" class="form-control" asp-items="ViewBag.PlataformaId"></select>
+
+            <div class="col-6">
+                <label asp-for="PlataformaId" class="form-label">Plataforma</label>
+                <select asp-for="PlataformaId" class="form-select" asp-items="ViewBag.PlataformaId"></select>
                 <span asp-validation-for="PlataformaId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-outline-primary ">Guardar</button>
+                <a asp-action="Index" class="btn btn-outline-danger">Cancelar</a>
             </div>
         </form>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="col-12 col-lg-4">
+        <div class="card app-card h-100">
+            <div class="card-body d-flex flex-column align-items-center justify-content-center gap-2 text-center p-2">
+                <h6>Vista previa</h6>
+                <img id="posterPreviewEdit" src="@(string.IsNullOrWhiteSpace(Model?.PosterUrlPortada) ? "https://via.placeholder.com/160x220?text=Poster" : Model.PosterUrlPortada)" alt="Poster preview" class="w-100" style="max-width: 100%; height: auto; object-fit: contain;" />
+                @* <p class="text-white-50 small mb-0">Actualizá la URL para ver el póster.</p> *@
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        const posterPlaceholder = 'https://via.placeholder.com/160x220?text=Poster';
+        function updatePosterPreview(input, imgId) {
+            const img = document.getElementById(imgId);
+            if (!img) return;
+            const url = input.value?.trim();
+            img.src = url ? url : posterPlaceholder;
+        }
+    </script>
 }
