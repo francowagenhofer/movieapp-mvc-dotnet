@@ -2,8 +2,6 @@
    HOME (scope)
    ========================= */
 
-
-
 .home-page .container {
     padding-top: 1.25rem !important;
     padding-bottom: 1.25rem !important;
@@ -117,4 +115,44 @@
 /* (Opcional) la estrella un toque más alineada */
 .home-page .material-symbols-outlined {
     vertical-align: middle;
+}
+
+
+
+/* ===== Pagination (Home) ===== */
+.home-page .pagination-modern {
+    margin-top: 1.5rem;
+    gap: .4rem;
+}
+
+.home-page .pagination-modern .page-link {
+    min-width: 30px;
+    text-align: center;
+    border-radius: .42rem;
+    border: 1px solid rgba(255,255,255,.12);
+    background: linear-gradient(135deg, rgba(255,255,255,.05), rgba(0,0,0,.35));
+    color: rgba(255,255,255,.82);
+    font-weight: 600;
+    padding: .40rem .65rem;
+    box-shadow: 0 8px 20px rgba(0,0,0,.24);
+    transition: transform .12s ease, border-color .12s ease, color .12s ease, background .12s ease;
+}
+
+.home-page .pagination-modern .page-link:hover {
+    border-color: rgba(255,255,255,.22);
+    color: rgba(255,255,255,.94);
+    background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(0,0,0,.45));
+    box-shadow: 0 12px 24px rgba(0,0,0,.30);
+}
+
+.home-page .pagination-modern .page-item.active .page-link {
+    background: linear-gradient(135deg, #5b6b7a, #3a4654);
+    color: #0b0f17;
+    border-color: transparent;
+}
+
+.home-page .pagination-modern .page-item.disabled .page-link {
+    opacity: .45;
+    cursor: not-allowed;
+    box-shadow: none;
 }

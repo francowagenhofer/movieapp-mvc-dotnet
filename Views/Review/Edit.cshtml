@@ -3,31 +3,114 @@
 @{
 }
 
-<h2 class="h3 fw-bold mb-4">Editar Reseña - @Model.PeliculaTitulo</h2>
-<form asp-controller="Review" asp-action="Edit" method="post">
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="PeliculaId" />
-    <div class="mb-3">
-        <label class="form-label">Calificación</label>
-        <div class="rating-stars">
-            <input type="radio" asp-for="Rating" value="5" id="star5" checked="@(Model.Rating == 5)" />
-            <label for="star5" class="star">★</label>
-            <input type="radio" asp-for="Rating" value="4" id="star4" checked="@(Model.Rating == 4)" />
-            <label for="star4" class="star">★</label>
-            <input type="radio" asp-for="Rating" value="3" id="star3" checked="@(Model.Rating == 3)" />
-            <label for="star3" class="star">★</label>
-            <input type="radio" asp-for="Rating" value="2" id="star2" checked="@(Model.Rating == 2)" />
-            <label for="star2" class="star">★</label>
-            <input type="radio" asp-for="Rating" value="1" id="star1" checked="@(Model.Rating == 1)" />
-            <label for="star1" class="star">★</label>
-        </div>
-        <span asp-validation-for="Rating" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Comentario" class="form-label">Comentario</label>
-        <textarea asp-for="Comentario" class="form-control" rows="4" placeholder="Comparte tu opinión sobre esta película...">@Model.Comentario</textarea>
-        <span asp-validation-for="Comentario" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-</form>
+<div class="review-container col-12 col-lg-6">
+    <header class="mb-3">
+    </header>
+    <h2 style="text-align: center; margin-bottom:2rem">Editar Reseña</h2>
+
+    <article class="review-card ">
+        <form asp-controller="Review" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="PeliculaId" />
+
+            <div class="review-main mb-3">
+                <div class="review-content">
+                    <h4 class="">Pelicula: @Model.PeliculaTitulo</h4>
+
+                    <div class="mb-3">
+                        <label asp-for="Rating" class="form-label">Tu calificación</label>
+
+                        <div id="rating-control" class="d-flex align-items-center gap-2">
+                            <div class="rating-stars" data-max="5">
+                                @for (var i = 1; i <= 5; i++)
+                                {
+                                    var starId = $"star{i}";
+                                    <input type="radio"
+                                           asp-for="Rating"
+                                           value="@i"
+                                           id="@starId"
+                                           class="visually-hidden" />
+                                    <label for="@starId"
+                                           class="star d-inline-flex align-items-center"
+                                           data-value="@i"
+                                           title="@($"{i} estrellas")"
+                                           style="cursor:pointer">
+                                        <span class="material-symbols-outlined">star</span>
+                                    </label>
+                                }
+                            </div>
+
+                            <div class="review-rating-compact" id="rating-indicator">
+                                <span class="material-symbols-outlined star-filled me-1">star</span>
+                                <span id="rating-number" class="review-rating-number">@Model.Rating</span>
+                            </div>
+                        </div>
+
+                        <span asp-validation-for="Rating" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Comentario" class="form-label">Comentario</label>
+                        <textarea asp-for="Comentario" class="form-control" rows="4" placeholder="Comparte tu opinión sobre esta película..."></textarea>
+                        <span asp-validation-for="Comentario" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-footer">
+                <button type="submit" class="btn app-btn app-btn-ghost">Guardar Cambios</button>
+                <a asp-action="Index" class="btn app-btn btn-outline-danger">Cancelar</a>
+            </div>
+        </form>
+    </article>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var initial = @Model.Rating;
+            var selectedValue = initial || 0;
+            var stars = document.querySelectorAll('.rating-stars .star');
+            var inputs = document.querySelectorAll('.rating-stars input[type="radio"]');
+            var numberEl = document.getElementById('rating-number');
+            var container = document.querySelector('.rating-stars');
+
+            function renderVisual(value) {
+                stars.forEach(function (label) {
+                    var v = parseInt(label.dataset.value, 10);
+                    var icon = label.querySelector('.material-symbols-outlined');
+                    var filled = v <= value;
+                    icon.textContent = filled ? 'star' : 'star_outline';
+                    icon.classList.toggle('active', filled);
+                });
+                numberEl.textContent = value;
+            }
+
+            function renderSelected(value) {
+                selectedValue = value;
+                renderVisual(value);
+                inputs.forEach(function (input) {
+                    input.checked = parseInt(input.value, 10) === value;
+                });
+            }
+
+            // init
+            renderSelected(selectedValue);
+
+            // Hover should only change visuals, not selection
+            stars.forEach(function (label) {
+                label.addEventListener('mouseenter', function () {
+                    renderVisual(parseInt(label.dataset.value, 10));
+                });
+                label.addEventListener('click', function () {
+                    renderSelected(parseInt(label.dataset.value, 10));
+                });
+            });
+
+            // Restore visuals to selected on mouseleave
+            container.addEventListener('mouseleave', function () {
+                renderVisual(selectedValue);
+            });
+        })();
+    </script>
+}

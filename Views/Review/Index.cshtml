@@ -1,54 +1,117 @@
 ﻿@model List<Review>
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
 @{
+    ViewData["Title"] = "Mis Reseñas";
 }
 
-<style>
-    .star-filled {
-        color: #ffc107;
-    }
+<div class="review-container">
+    <header class="mb-3">
+        <h2 class="h3 fw-bold mb-1">Mis Reseñas</h2>
+        <p class="text-white-50 mb-3">
+            Reseñas y calificaciones guardadas en un solo lugar.
+        </p>
 
-    .star-empty {
-        color: #6c757d;
-    }
-</style>
-
-<h2 class="h3 fw-bold mb-4">Mis Reseñas</h2>
-
-
-<div class="mt-5">
-    <div class="list-group">
-
-        @foreach (var item in Model)
-        {
-            <div class="list-group-item bg-dark text-light border-secondary review-card p-4 mb-3">
-                <div class="d-flex align-items-center mb-3">
-                    <img alt="@item.Pelicula.Titulo" class="rounded-circle me-3" height="40" src="@item.Pelicula.PosterUrlPortada" width="40" />
-                    <div>
-                        <h5 class="mb-0 text-light">@item.Pelicula.Titulo</h5>
-                        <small class="">Fecha Reseña: @item.FechaReview.ToShortDateString()</small>
-                    </div>
-                </div>
-
-                <div class="mb-2">
-                    @for (int i = 1; i <= 5; i++)
-                    {
-                        if (i <= item.Rating)
-                        {
-                            <span class="material-symbols-outlined star-filled">star</span>
-                        }
-                        else
-                        {
-                            <span class="material-symbols-outlined star-empty">grade</span>
-                        }
-                    }
-                </div>
-                <p class="mb-3">@item.Comentario</p>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Editar</a>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+            <div class="review-stats">
+                <strong class="me-2">Total:</strong> <span class="badge bg-secondary">@Model.Count</span>
             </div>
-        }
 
-    </div>
+            <div class="review-search w-md-auto">
+                <div class="input-group input-group-sm">
+                    <input id="review-search" type="search" class="form-control" placeholder="Buscar por película..." aria-label="Buscar reseñas por película" />
+                    <button id="review-clear" type="button" class="btn btn-outline-secondary">Limpiar</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-secondary small">
+            Todavía no tenés reseñas. Buscá una película en el home y dejá tu primera opinión
+        </div>
+    }
+    else
+    {
+        <div class="review-list">
+            @foreach (var item in Model)
+            {
+                <article class="review-card rc-hover" data-movie-title="@item.Pelicula?.Titulo">
+                    <div class="review-main">
+                        <img alt="@item.Pelicula?.Titulo"
+                             class="review-thumb"
+                             src="@item.Pelicula?.PosterUrlPortada" />
+
+                        <div class="review-content">
+
+                            <div class="review-title-row">
+                                <h5 class="review-title">@item.Pelicula?.Titulo</h5>
+                            </div>
+                            <div class="review-meta-row">
+                                <span class="review-date">
+                                    @item.FechaReview.ToShortDateString()
+                                </span>
+
+                                <div class="review-rating-compact">
+                                    <span class="material-symbols-outlined star-filled me-1">star</span>
+                                    <span class="review-rating-number">@item.Rating</span>
+                                </div>
+
+                            </div>
+
+                            <p class="review-text">@item.Comentario</p>
+                        </div>
+
+                    </div>
+                    <div class="review-footer">
+                        <a asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm app-btn app-btn-ghost">
+                            Editar Reseña
+                        </a>
+                        <a asp-action="Delete"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm app-btn btn-outline-danger">
+                            Eliminar
+                        </a>
+                    </div>
+
+
+                </article>
+            }
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var input = document.getElementById('review-search');
+            var clearBtn = document.getElementById('review-clear');
+            var list = document.querySelectorAll('.review-list .review-card');
+
+            function normalize(text) {
+                return (text || '').toString().toLowerCase().trim();
+            }
+
+            function filter() {
+                var q = normalize(input.value);
+                list.forEach(function (card) {
+                    var title = normalize(card.dataset.movieTitle);
+                    if (!q || title.indexOf(q) !== -1) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            input.addEventListener('input', filter);
+            clearBtn.addEventListener('click', function () {
+                input.value = '';
+                filter();
+                input.focus();
+            });
+        })();
+    </script>
+}

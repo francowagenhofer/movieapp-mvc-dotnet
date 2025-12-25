@@ -1,12 +1,15 @@
 ﻿@model List<Pelicula>
+@using System.Linq
+
+@using app_movie_mvc.Models
 @{
     ViewData["Title"] = "Home Page";
 
     var paginaActual = ViewBag.PaginaActual ?? 1;
     var totalPaginas = ViewBag.TotalPaginas ?? 1;
     var totalPeliculas = ViewBag.TotalPeliculas ?? 0;
-     var busqueda = ViewBag.TxtBusqueda ?? "";
-     var generoId = ViewBag.GeneroId ?? 0;
+    var busqueda = ViewBag.TxtBusqueda ?? "";
+    var generoId = ViewBag.GeneroId ?? 0;
 }
 
 <main class="flex-grow-1 home-page">
@@ -22,6 +25,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 d-flex flex-wrap gap-2 justify-content-lg-end">
+
                     <div class="dropdown">
                         <select name="generoId" asp-items="@ViewBag.GeneroId" class="form-select form-select-lg btn-outline-secondary"
                                 onchange="this.form.submit()"></select>
@@ -34,15 +38,15 @@
                                 class="form-select form-select-lg btn-outline-secondary"
                                 onchange="this.form.submit()"></select>
                     </div>
-                    
+
                     <div class="dropdown">
                         <select name="minRating"
                                 asp-items="@ViewBag.MinRating"
                                 class="form-select form-select-lg btn-outline-secondary"
                                 onchange="this.form.submit()"></select>
                     </div>
-                
-                
+
+
                 </div>
             </div>
         </form>
@@ -51,18 +55,29 @@
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
             @foreach (var pelicula in Model)
             {
+                var reviews = pelicula.ListaReviews ?? new List<Review>();
+                var ratingPromedio = reviews.Count > 0
+                    ? Math.Round(reviews.Average(r => r.Rating), 1)
+                    : 0;
+
                 <div class="col">
                     <a asp-action="Details" asp-route-id="@pelicula.Id">
                         <div class="card h-100 border-0 shadow-sm">
                             <div class="position-relative">
                                 <img alt="@pelicula.Titulo" class="card-img-top" src="@pelicula.PosterUrlPortada" />
                             </div>
+
                             <div class="card-body p-2">
                                 <h5 class="card-title fs-6 fw-semibold mb-1">@pelicula.Titulo</h5>
-                                <div class="d-flex align-items-center text-muted small">
-                                    <span class="material-symbols-outlined text-warning me-1" style="font-size: 1rem;"> star </span>
-                                    <span>4.5</span>
+
+
+                                <div class="review-rating-compact">
+                                    <span class="material-symbols-outlined star-filled me-1">star</span>
+                                    <span class="review-rating-number">@ratingPromedio.ToString("0.0")</span>
                                 </div>
+
+
+
                             </div>
                         </div>
                     </a>
@@ -76,7 +91,7 @@
             <div class="row mt-4">
                 <div class="col-12">
                     <nav aria-label="Navegación de páginas">
-                        <ul class="pagination justify-content-center">
+                        <ul class="pagination pagination-modern justify-content-center">
                             <!-- Botón Anterior -->
                             <li class="page-item @(paginaActual == 1 ? "disabled" : "")">
                                 <a asp-action="Index" class="page-link" asp-route-pagina="@(paginaActual - 1)" asp-route-txtBusqueda="@busqueda" asp-route-generoId="@generoId">Anterior</a>

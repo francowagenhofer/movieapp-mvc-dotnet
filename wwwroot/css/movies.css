@@ -3,3 +3,189 @@
     width: auto;
     display: block;
 }
+
+/* RESEÑAS */
+
+/* Grid centrado y ancho controlado */
+.review-list {
+    display: grid;
+    grid-template-columns: 1fr; /* forcing single column to keep cards full width */
+    gap: 1rem;
+    max-width: 900px; /* centra el contenido */
+    margin: 0 auto; /* centrado dentro del container */
+}
+
+/* Card */
+
+.review-card {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.05) 0%, rgba(59, 130, 246, 0.03) 100%);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.25rem;
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    width: 100%;
+}
+
+.rc-hover:hover {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+    border-color: rgba(79, 172, 254, 0.3);
+}
+
+
+/* Container for reviews */
+.review-container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Mantener la lista dentro del contenedor */
+.review-container .review-list {
+    max-width: 100%;
+}
+
+/* keep thumbnail size consistent */
+.review-thumb {
+    width: 64px;
+    height: 96px;
+    border-radius: .45rem;
+    object-fit: cover;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(0,0,0,.35);
+    flex-shrink: 0;
+}
+
+/* Layout interno */
+.review-main {
+    display: flex;
+    gap: .75rem;
+    align-items: flex-start;
+}
+
+.review-content {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Título */
+.review-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: .5rem;
+    margin-bottom: .1rem;
+}
+
+.reviews-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.01em;
+}
+
+/* Meta: rating + fecha */
+.review-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: .4rem;
+}
+
+.review-rating-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: .15rem;
+    font-size: .8rem;
+    color: rgba(255,255,255,.90);
+    background: linear-gradient(135deg, rgba(255,193,7,.18), rgba(255,193,7,.08));
+    border-radius: 999px;
+    padding: .2rem .55rem;
+    border: 1px solid rgba(255,193,7,.40);
+}
+
+.review-rating-number {
+    font-weight: 600;
+}
+
+.review-rating-max {
+    font-size: .78rem;
+    color: rgba(255,255,255,.75);
+}
+
+.review-date {
+    color: rgba(255,255,255,.55);
+    font-size: .8rem;
+    white-space: nowrap;
+}
+
+/* Icono estrella dentro del chip */
+.review-rating-compact .material-symbols-outlined {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* Texto de reseña */
+.review-text {
+    color: rgba(255,255,255,.86);
+    font-size: .9rem;
+    margin-bottom: 0;
+    max-height: 4.2em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* Footer con botones */
+.review-footer {
+    margin-top: .45rem;
+    padding-top: .9rem;
+    border-top: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    justify-content:center;
+    gap: .6rem; 
+}
+
+/* Footer sin divisor para edición */
+.review-footer.no-divider {
+    border-top: none;
+    margin-top: 1rem;
+    padding-top: 0;
+}
+
+/* Ajustes de disposición para edición */
+.review-container .review-card .review-main.flex-column {
+    gap: 1rem;
+}
+
+/* On very wide screens show two columns but keep cards consistent */
+@media (min-width: 992px) {
+    .review-list {
+        grid-template-columns: 1fr 1fr;
+        max-width: 1100px;
+    }
+}
+
+/* Rating control visuals */
+.rating-stars .material-symbols-outlined {
+    font-size: 1.4rem;
+    color: rgba(255,255,255,.45); /* default muted */
+    transition: color .12s ease;
+}
+.rating-stars .material-symbols-outlined.active {
+    color: #ffc107; /* amarillo (Bootstrap warning) */
+}
+.rating-stars .star:hover .material-symbols-outlined {
+    color: #ffd54f; /* hover un poco más claro */
+}
+
+/* Align rating indicator chip with stars */
+#rating-control .review-rating-compact {
+    margin-left: .25rem;
+}
+
+/*-------------------------------------------*/

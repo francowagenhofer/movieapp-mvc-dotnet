@@ -28,7 +28,9 @@ namespace app_movie_mvc.Controllers
         {
             if (pagina < 1) pagina = 1;
 
-            var consulta = _context.Peliculas.AsQueryable();
+            var consulta = _context.Peliculas
+                .Include(p => p.ListaReviews)
+                .AsQueryable();
             if (!string.IsNullOrEmpty(txtBusqueda))
             {
                 consulta = consulta.Where(p => p.Titulo.Contains(txtBusqueda));
