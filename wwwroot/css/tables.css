@@ -1,20 +1,17 @@
-﻿/* =========================
+﻿﻿ /* =========================
    Tables / DataTables tweaks
    ========================= */
-
 .table {
     border-color: rgba(255,255,255,.08);
 }
 
-    .table thead th {
-
-        color: rgba(255,255,255,.75);
-        font-weight: 600;
-    }
+.table thead th {
+    color: rgba(255,255,255,.75);
+    font-weight: 600;
+}
 
 .dataTables_wrapper .dataTables_filter input,
 .dataTables_wrapper .dataTables_length select {
-
     border-radius: .45rem;
 }
 
@@ -22,8 +19,7 @@
     border: 1px solid rgba(255,255,255,.08);
     background: rgba(33,37,41,.55);
     border-radius: .45rem;
-    padding: 1.5rem; 
-
+    padding: 1.5rem;
 }
 
 .app-table thead th {
@@ -37,7 +33,6 @@
 .app-table tbody td {
     border-color: rgba(255,255,255,.06);
     background: transparent;
-
 }
 
 .poster-thumb {

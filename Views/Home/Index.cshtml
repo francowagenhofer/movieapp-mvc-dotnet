@@ -51,40 +51,69 @@
             </div>
         </form>
 
-        @* listado de tarjetas*@
+        @*  listado de tarjetas*? *@
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
             @foreach (var pelicula in Model)
             {
                 var reviews = pelicula.ListaReviews ?? new List<Review>();
                 var ratingPromedio = reviews.Count > 0
-                    ? Math.Round(reviews.Average(r => r.Rating), 1)
-                    : 0;
+                ? Math.Round(reviews.Average(r => r.Rating), 1)
+                : 0;
+                var favCount = pelicula.UusariosFavorito?.Count ?? 0;
+                bool isFav = false;
+                if (User?.Identity?.IsAuthenticated == true)
+                {
+                    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                    isFav = pelicula.UusariosFavorito?.Any(f => f.UsuarioId == userId) ?? false;
+                }
 
                 <div class="col">
-                    <a asp-action="Details" asp-route-id="@pelicula.Id">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div class="position-relative">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="position-relative">
+                            <a asp-action="Details" asp-route-id="@pelicula.Id">
                                 <img alt="@pelicula.Titulo" class="card-img-top" src="@pelicula.PosterUrlPortada" />
-                            </div>
+                            </a>
+                        </div>
 
-                            <div class="card-body p-2">
-                                <h5 class="card-title fs-6 fw-semibold mb-1">@pelicula.Titulo</h5>
+                        <div class="card-body p-2">
+                            <h5 class="card-title fs-6 fw-semibold mb-1 text-truncate" title="@pelicula.Titulo">
+                                <a asp-action="Details" asp-route-id="@pelicula.Id" class="text-decoration-none text-reset">@pelicula.Titulo</a>
+                            </h5>
 
-
+                            <div class="d-flex align-items-center justify-content-between">
                                 <div class="review-rating-compact">
                                     <span class="material-symbols-outlined star-filled me-1">star</span>
                                     <span class="review-rating-number">@ratingPromedio.ToString("0.0")</span>
                                 </div>
 
 
-
+                                <div class="d-inline-flex align-items-center">
+                                    @if (User?.Identity?.IsAuthenticated == true)
+                                    {
+                                        <form asp-controller="Favoritos" asp-action="Toggle" method="post" class="m-0">
+                                            <input type="hidden" name="id" value="@pelicula.Id" />
+                                            <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+                                            <button type="submit"
+                                                    class="btn btn-sm p-1 d-inline-flex align-items-center justify-content-center border-0 bg-transparent"
+                                                    style="color:@(isFav ? "#ff3b30" : "#8a8a8a"); box-shadow:none;"
+                                                    title="Agregar/Quitar favorito" aria-label="Agregar o quitar favorito">
+                                                <span class="material-symbols-outlined" style="font-size:18px;line-height:1;font-variation-settings:'FILL' @(isFav ? "1" : "0");">favorite</span>
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="material-symbols-outlined" style="font-size:18px;line-height:1;color:#8a8a8a;font-variation-settings:'FILL' 0;">favorite</span>
+                                    }
+                                    <span class="ms-1 small text-white-50">@favCount</span>
+                                </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             }
         </div>
-
+            
         <!-- Paginación -->
         @if (totalPaginas > 1)
         {

@@ -20,6 +20,14 @@
     int reviewCount = reviews.Count;
     double averageRating = reviewCount > 0 ? Math.Round(reviews.Average(r => r.Rating), 1) : 0;
     int filledStars = Math.Clamp((int)Math.Round(averageRating, MidpointRounding.AwayFromZero), 0, 5);
+
+    var favCount = Model.UusariosFavorito?.Count ?? 0;
+    bool isFav = false;
+    if (User?.Identity?.IsAuthenticated == true)
+    {
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        isFav = Model.UusariosFavorito?.Any(f => f.UsuarioId == userId) ?? false;
+    }
 }
 
 <main class="movie-details-container">
@@ -34,7 +42,33 @@
             <div class="detail-info-section">
                 <!-- Título y metadata -->
                 <div>
-                    <h1 class="detail-title">@Model.Titulo</h1>
+                    <h1 class="detail-title d-flex align-items-center justify-content-between">
+                        <span>@Model.Titulo</span>
+                        <span class="d-inline-flex align-items-center">
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <form asp-controller="Favoritos" asp-action="Toggle" method="post" class="m-0">
+                                    <input type="hidden" name="id" value="@Model.Id" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit"
+                                            class="btn btn-sm p-1 d-inline-flex align-items-center justify-content-center border-0 bg-transparent"
+                                            style="color:@(isFav ? "#ff3b30" : "#8a8a8a"); box-shadow:none;"
+                                            title="Agregar/Quitar favorito" aria-label="Agregar o quitar favorito">
+                                        <span class="material-symbols-outlined" style="font-size:30px;line-height:1;font-variation-settings:'FILL' @(isFav ? "1" : "0");">favorite</span>
+                                    </button>
+                                </form>
+                            }
+
+                            else
+                            {
+                                <span class="material-symbols-outlined" style="font-size:30px;line-height:1;opacity:.6">favorite</span>
+                            }
+
+
+
+                            <span class="ms-1 small text-white-50">@favCount</span>
+                        </span>
+                    </h1>
                     <div class="detail-metadata">
                         <span class="detail-metadata-item">@Model.Genero.Descripcion</span>
                         <span class="detail-metadata-separator">•</span>
@@ -50,7 +84,7 @@
                 <!-- Tarjeta de Rating -->
                 <div class="detail-rating-card">
                     <div class="detail-rating-main">
-                     
+
                         <!-- Score y estrellas -->
                         <div class="detail-rating-score-section">
                             <div class="detail-rating-score">@averageRating.ToString("0.0")</div>

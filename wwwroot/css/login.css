@@ -8,7 +8,8 @@
     border-radius: .55rem; /* menos redondeado */
     box-shadow: 0 10px 28px rgba(0,0,0,.35); /* sombra suave */
     backdrop-filter: blur(6px); /* sutil, opcional */
-
+    max-width: 500px;
+    margin: 0 auto;
 }
 
     .app-auth-card .card-title {
@@ -22,14 +23,21 @@
 
     .app-auth-card .form-label {
         color: rgba(255,255,255,.75);
-        font-size: .9rem;
+        font-size: .8rem;
+        font-weight: 500;
+        margin-bottom: .2rem;
     }
 
     .app-auth-card .form-control {
         background: rgba(255,255,255,.06);
         border: 1px solid rgba(255,255,255,.14);
         color: rgba(255,255,255,.92);
-        border-radius: .45rem;
+        border-radius: .4rem;
+        font-size: .9rem;
+    }
+
+    .app-auth-card .form-control-sm {
+        padding: .4rem .7rem;
     }
 
         .app-auth-card .form-control::placeholder {
@@ -39,7 +47,12 @@
         .app-auth-card .form-control:focus {
             background: rgba(255,255,255,.08);
             border-color: rgba(13,110,253,.55);
-            box-shadow: 0 0 0 .18rem rgba(13,110,253,.18);
+            box-shadow: 0 0 0 .12rem rgba(13,110,253,.18);
+        }
+
+        .app-auth-card .form-control:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
     .app-auth-card a {
@@ -54,3 +67,128 @@
 .auth-page {
     background: radial-gradient(1200px 500px at 50% 0%, rgba(13,110,253,.10), rgba(0,0,0,0));
 }
+
+/* =========================
+   Mi Perfil - Card más ancha
+   ========================= */
+
+.app-profile-card {
+    max-width: 750px !important;
+}
+
+.profile-img-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: .5rem;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,.15);
+    box-shadow: 0 3px 10px rgba(0,0,0,.3);
+    transition: all 0.3s ease;
+}
+
+.profile-edit-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13,110,253,.9);
+    border: 2px solid rgba(20, 22, 26, 1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    cursor: pointer;
+}
+
+    .profile-edit-btn:hover {
+        background: rgba(13,110,253,1);
+        transform: scale(1.08);
+        box-shadow: 0 3px 10px rgba(13,110,253,.35);
+    }
+
+    .profile-edit-btn .material-symbols-outlined {
+        color: white;
+        font-size: 14px;
+    }
+
+.app-auth-card h2 {
+    color: rgba(255,255,255,.95);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+}
+
+.app-auth-card h2.h5 {
+    font-size: 1.25rem;
+}
+
+.app-auth-card .text-secondary {
+    color: rgba(255,255,255,.55) !important;
+    font-size: .85rem;
+    margin-bottom: 0;
+}
+
+.app-auth-card .alert-success {
+    background: rgba(25, 135, 84, .15);
+    border: 1px solid rgba(25, 135, 84, .3);
+    color: rgba(255,255,255,.90);
+    border-radius: .4rem;
+    padding: .65rem .9rem;
+    font-size: .9rem;
+}
+
+    .app-auth-card .alert-success .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+/* Mejoras para el formulario de perfil */
+.app-auth-card .btn-sm {
+    padding: .5rem 1rem;
+    font-size: .9rem;
+}
+
+.app-auth-card .text-danger {
+    font-size: .75rem;
+    margin-top: .15rem;
+}
+
+/* Espaciado para el grid de dos columnas */
+.app-profile-card .row.g-3 {
+    row-gap: .9rem !important;
+}
+
+/* Botones con iconos */
+.app-auth-card .btn .material-symbols-outlined {
+    margin-right: .3rem;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.app-auth-card .btn-primary {
+    background: rgba(13,110,253,.9);
+    border-color: rgba(13,110,253,.9);
+}
+
+    .app-auth-card .btn-primary:hover {
+        background: rgba(13,110,253,1);
+        border-color: rgba(13,110,253,1);
+    }
+
+.app-auth-card .btn-outline-secondary {
+    border-color: rgba(255,255,255,.3);
+    color: rgba(255,255,255,.85);
+}
+
+    .app-auth-card .btn-outline-secondary:hover {
+        background: rgba(255,255,255,.1);
+        border-color: rgba(255,255,255,.4);
+        color: rgba(255,255,255,.95);
+    }

@@ -4,14 +4,19 @@
     ViewData["Title"] = "Películas";
 }
 
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
+<div class="d-flex flex-column align-items-center text-center gap-2 mb-3">
     <div>
         <h1 class="h3 mb-1">Gestión de Películas</h1>
-        <div class="text-white-50 small">Administrá el catálogo: crear, editar, ver detalles o eliminar.</div>
+        <div class="text-white-50 small">Administrá el catálogo: agregar, editar, ver detalles o eliminar.</div>
+    </div>
+</div>
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
+    <div class="review-stats">
+        <strong class="me-2">Total:</strong> <span class="badge bg-secondary">@Model.Count()</span>
     </div>
 
     <div class="d-flex gap-2">
-        @* <a asp-action="Create" class="btn btn-sm app-btn btn-outline-success"> *@
         <a asp-action="Create" class="btn app-btn btn-outline-primary">
             + Agregar Pelicula
         </a>
@@ -25,7 +30,7 @@
                 <thead>
                     <tr>
                         <th>Título</th>
-                        <th>Género</th>
+                        <th>Género</th> 
                         <th>Plataforma</th>
                         <th class="text-center">Poster</th>
                         <th class="text-end">Acciones</th>

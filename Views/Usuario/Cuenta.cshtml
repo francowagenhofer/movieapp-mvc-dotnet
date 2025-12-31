@@ -1,0 +1,144 @@
+@model AdministrarCuentaViewModel
+
+@{
+    string mensaje = ViewData["Mensaje"] as string ?? TempData["Mensaje"] as string ?? "";
+}
+
+<main class="flex-grow-1 d-flex align-items-center justify-content-center py-3">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-12 col-md-10 col-lg-6 col-xl-5">
+
+                @if (!string.IsNullOrEmpty(mensaje))
+                {
+                    <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                        @mensaje
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <div class="card app-auth-card app-profile-card p-4 rounded-3">
+
+                    <!-- Encabezado de Cuenta -->
+                    <div class="text-center mb-4 pb-3 border-bottom border-secondary border-opacity-10">
+                        <h2 class="h5 fw-bold mb-1">Administración de Cuenta</h2>
+                        <p class="text-secondary mb-0">@Model.Email</p>
+                    </div>
+
+                    <!-- Información de la Cuenta -->
+                    <div class="mb-4">
+                        <h3 class="h6 fw-bold mb-3">Información de tu cuenta</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="info-field">
+                                    <label class="text-secondary small">Nombre</label>
+                                    <p class="mb-0">@Model.Nombre @Model.Apellido</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-field">
+                                    <label class="text-secondary small">Email</label>
+                                    <p class="mb-0">@Model.Email</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-field">
+                                    <label class="text-secondary small">Estado</label>
+                                    <p class="mb-0">
+                                        @if (Model.EstaActiva)
+                                        {
+                                            <span class="badge bg-success">Activa</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Suspendida</span>
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-field">
+                                    <label class="text-secondary small">Miembro desde</label>
+                                    <p class="mb-0">@Model.FechaRegistro.ToString("dd/MM/yyyy")</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-field">
+                                    <label class="text-secondary small">Reseñas publicadas</label>
+                                    <p class="mb-0">@Model.TotalReviews</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-field">
+                                    <label class="text-secondary small">Películas favoritas</label>
+                                    <p class="mb-0">@Model.TotalFavoritos</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Seguridad -->
+                    <div class="border-top border-secondary border-opacity-10 pt-4 mb-4">
+                        <h6 class="fw-bold mb-3 text-center">Seguridad</h6>
+                        <div class="d-flex justify-content-center">
+                            <a asp-action="CambiarContraseña" class="btn btn-outline-primary fw-semibold d-flex align-items-center justify-content-center gap-2" style="width: 500px;">
+                                <span class="material-symbols-outlined" style="font-size: 18px;">lock</span>
+                                Cambiar contraseña
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Peligro -->
+                    <div class="border-top border-secondary border-opacity-10 pt-4 mb-4">
+                        <h6 class="fw-bold text-danger mb-3 text-center">Zona de peligro</h6>
+                        
+                        <div class="d-flex justify-content-center mb-3">
+                            <div class="alert alert-light border border-danger border-opacity-25 mb-0 text-center" style="width: 500px;">
+                                <small class="text-danger">
+                                    <strong>Advertencia:</strong> Las acciones en esta sección no se pueden deshacer.
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <form method="post" asp-action="SuspenderCuenta" onsubmit="return confirm('¿Estás seguro que deseas suspender tu cuenta? No podrás iniciar sesión nuevamente sin contactar al equipo de soporte.');" class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-outline-danger fw-semibold d-flex align-items-center justify-content-center gap-2" style="width: 500px;">
+                                <span class="material-symbols-outlined" style="font-size: 18px;">block</span>
+                                Suspender cuenta
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Botón de Volver -->
+                    <div class="pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-center">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary fw-semibold d-flex align-items-center justify-content-center gap-2" style="width: 500px;">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
+                            Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    .info-field {
+        background-color: rgba(255, 255, 255, 0.03);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .info-field label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-field p {
+        font-size: 0.95rem;
+        margin-top: 4px;
+    }
+</style>

@@ -4,11 +4,23 @@ using app_movie_mvc.Service;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Configurar localización en español argentino
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { new CultureInfo("es-AR") };
+    options.DefaultRequestCulture = new RequestCulture("es-AR");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 
 // Incluir dbContext
 builder.Services.AddDbContext<MovieDbContext>(options =>
@@ -24,7 +36,8 @@ builder.Services.AddIdentityCore<Usuario>(o =>
 })
     .AddRoles<IdentityRole>() // Sirve para manejar los roles de los usuarios
     .AddEntityFrameworkStores<MovieDbContext>() // Sirve para manejar el almacenamiento de los usuarios en la base de datos
-    .AddSignInManager(); // Sirve para manejar la autenticacion de usuarios
+    .AddSignInManager() // Sirve para manejar la autenticacion de usuarios
+    .AddErrorDescriber<ErrorDescribirEspañol>(); // Agregar mensajes en español
 
 builder.Services.AddAuthentication(o =>
 {
@@ -80,6 +93,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Usar localización
+app.UseRequestLocalization();
+
 app.UseRouting();
 
 app.UseAuthentication();

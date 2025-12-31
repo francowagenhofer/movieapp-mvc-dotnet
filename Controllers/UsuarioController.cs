@@ -3,6 +3,8 @@ using app_movie_mvc.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using app_movie_mvc.Data;
 
 namespace app_movie_mvc.Controllers
 {
@@ -12,13 +14,15 @@ namespace app_movie_mvc.Controllers
         private readonly SignInManager<Usuario> _signInManager;
         private readonly ImagenStorage _imagenStorage;
         private readonly IEmailService _emailService;
+        private readonly MovieDbContext _context;
 
-        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage, IEmailService emailService)
+        public UsuarioController(UserManager<Usuario> userManager, SignInManager<Usuario> signInManager, ImagenStorage imagenStorage, IEmailService emailService, MovieDbContext context)
         {
             _signInManager = signInManager; // Sirve para manejar la autenticacion de usuarios, cookies, etc
             _userManager = userManager; // Sirve para manejar los usuarios, roles y claims
             _imagenStorage = imagenStorage;
             _emailService = emailService;
+            _context = context;
         }
 
         public IActionResult Login()
@@ -66,7 +70,8 @@ namespace app_movie_mvc.Controllers
                     Email = usuario.Email,
                     Nombre = usuario.Nombre,
                     Apellido = usuario.Apellido,
-                    ImagenUrlPerfil = "/images/default-avatar.png" // ruta de la carpeta images - root // Asignar una imagen de perfil por defecto
+                    ImagenUrlPerfil = "/images/default-avatar.png",
+                    FechaRegistro = DateTime.UtcNow // Establecer la fecha de registro al crear un nuevo usuario
                 };
                 var resultado = await _userManager.CreateAsync(nuevoUsuario, usuario.Clave);
                 // Crear el usuario en la base de datos
@@ -113,6 +118,8 @@ namespace app_movie_mvc.Controllers
                 Nombre = usuarioActual.Nombre,
                 Apellido = usuarioActual.Apellido,
                 Email = usuarioActual.Email,
+                FechaNacimiento = usuarioActual.FechaNacimiento == DateTime.MinValue ? null : usuarioActual.FechaNacimiento,
+                PhoneNumber = usuarioActual.PhoneNumber,
                 ImagenUrlPerfil = usuarioActual.ImagenUrlPerfil
             };
 
@@ -133,22 +140,31 @@ namespace app_movie_mvc.Controllers
                     if (usuarioVM.ImagenPerfil is not null && usuarioVM.ImagenPerfil.Length > 0)
                     {
                         // opcional: borrar la anterior (si no es placeholder)
-                        if (!string.IsNullOrWhiteSpace(usuarioActual.ImagenUrlPerfil))
+                        if (!string.IsNullOrWhiteSpace(usuarioActual.ImagenUrlPerfil) && 
+                            !usuarioActual.ImagenUrlPerfil.Contains("default-avatar"))
                             await _imagenStorage.DeleteAsync(usuarioActual.ImagenUrlPerfil);
 
                         var nuevaRuta = await _imagenStorage.SaveAsync(usuarioActual.Id, usuarioVM.ImagenPerfil);
                         usuarioActual.ImagenUrlPerfil = nuevaRuta;
                         usuarioVM.ImagenUrlPerfil = nuevaRuta;
                     }
+                    else
+                    {
+                        // Mantener la imagen actual si no se subió una nueva
+                        usuarioVM.ImagenUrlPerfil = usuarioActual.ImagenUrlPerfil;
+                    }
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError(string.Empty, ex.Message);
+                    usuarioVM.ImagenUrlPerfil = usuarioActual.ImagenUrlPerfil;
                     return View(usuarioVM);
                 }
 
                 usuarioActual.Nombre = usuarioVM.Nombre;
                 usuarioActual.Apellido = usuarioVM.Apellido;
+                usuarioActual.FechaNacimiento = usuarioVM.FechaNacimiento ?? DateTime.MinValue;
+                usuarioActual.PhoneNumber = usuarioVM.PhoneNumber;
 
                 var resultado = await _userManager.UpdateAsync(usuarioActual);
 
@@ -168,5 +184,83 @@ namespace app_movie_mvc.Controllers
             return View(usuarioVM);
         }
 
+        [Authorize]
+        public async Task<IActionResult> Cuenta()
+        {
+            var usuarioActual = await _userManager.GetUserAsync(User);
+            
+            var usuario = await _context.Users
+                .Include(u => u.ReviewsUsuario)
+                .Include(u => u.PeliculasFavoritas)
+                .FirstOrDefaultAsync(u => u.Id == usuarioActual.Id);
+            
+            var cuentaVM = new AdministrarCuentaViewModel
+            {
+                Email = usuarioActual.Email,
+                Nombre = usuarioActual.Nombre,
+                Apellido = usuarioActual.Apellido,
+                FechaRegistro = usuario?.FechaRegistro ?? DateTime.UtcNow,
+                EstaActiva = !usuarioActual.LockoutEnabled || usuarioActual.LockoutEnd == null || usuarioActual.LockoutEnd < DateTime.UtcNow,
+                TotalReviews = usuario?.ReviewsUsuario?.Count ?? 0,
+                TotalFavoritos = usuario?.PeliculasFavoritas?.Count ?? 0
+            };
+
+            return View(cuentaVM);
+        }
+
+        [Authorize]
+        public IActionResult CambiarContraseña()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambiarContraseña(CambiarContraseñaViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var usuarioActual = await _userManager.GetUserAsync(User);
+            if (usuarioActual == null)
+                return RedirectToAction("Login");
+
+            var resultado = await _userManager.ChangePasswordAsync(usuarioActual, model.ContraseñaActual, model.ContraseñaNueva);
+
+            if (resultado.Succeeded)
+            {
+                await _signInManager.RefreshSignInAsync(usuarioActual);
+                ViewBag.Mensaje = "Contraseña cambiada con éxito.";
+                return View();
+            }
+            else
+            {
+                foreach (var error in resultado.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SuspenderCuenta()
+        {
+            var usuarioActual = await _userManager.GetUserAsync(User);
+            if (usuarioActual == null)
+                return RedirectToAction("Login");
+
+            await _userManager.SetLockoutEnabledAsync(usuarioActual, true);
+            await _userManager.SetLockoutEndDateAsync(usuarioActual, DateTimeOffset.MaxValue);
+
+            await _signInManager.SignOutAsync();
+
+            TempData["Mensaje"] = "Tu cuenta ha sido suspendida exitosamente. No podrás iniciar sesión nuevamente sin contactar al equipo de soporte.";
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

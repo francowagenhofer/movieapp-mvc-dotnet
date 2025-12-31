@@ -4,33 +4,34 @@
     ViewData["Title"] = "Detalles";
 }
 
-<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mb-3">
+<div class="d-flex flex-column align-items-center text-center gap-2 mb-3">
     <div>
         <h1 class="h3 mb-1">Plataforma</h1>
         <div class="text-white-50 small">Detalles de la plataforma seleccionada.</div>
     </div>
-
-    <div class="d-flex gap-2">
-        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm app-btn btn-outline-primary">Editar</a>
-        <a asp-action="Index" class="btn btn-sm app-btn app-btn-ghost">Volver</a>
-    </div>
 </div>
 
-
-<div class="card app-card">
-    <div class="card-body">
-        <div class="row g-3 align-items-center">
-            <div class="col-12 col-md-3 text-md-center">
-                <img src="@Model.LogoUrl" alt="@Model.Nombre" class="logo-thumb" />
+<div class="d-flex justify-content-center mb-3">
+    <div class="card app-card w-100" style="max-width: 50%;">
+        <div class="card-body text-center">
+            <div class="row g-3 align-items-center">
+                <div class="col-12 col-md-3 text-md-center">
+                    <img src="@Model.LogoUrl" alt="@Model.Nombre" class="logo-thumb" />
+                </div>
+                <div class="col-12 col-md-9">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">Nombre</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Nombre)</dd>
+                        <dt class="col-sm-3">Url</dt>
+                        <dd class="col-sm-9">@Html.DisplayFor(model => model.Url)</dd>
+                    </dl>
+                </div>
             </div>
-            <div class="col-12 col-md-9">
-                <dl class="row mb-0">
-                    <dt class="col-sm-3">Nombre</dt>
-                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Nombre)</dd>
-                    <dt class="col-sm-3">Url</dt>
-                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Url)</dd>
-                </dl>
+            <div class="d-flex justify-content-center gap-2 pt-3 mt-2 border-top border-secondary border-opacity-25">
+                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn app-btn btn-outline-primary">Editar</a>
+                <a asp-action="Index" class="btn app-btn app-btn-ghost">Volver</a>
             </div>
         </div>
     </div>
 </div>
+

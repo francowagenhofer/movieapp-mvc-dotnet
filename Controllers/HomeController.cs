@@ -30,6 +30,7 @@ namespace app_movie_mvc.Controllers
 
             var consulta = _context.Peliculas
                 .Include(p => p.ListaReviews)
+                .Include(p => p.UusariosFavorito)
                 .AsQueryable();
             if (!string.IsNullOrEmpty(txtBusqueda))
             {
@@ -111,6 +112,7 @@ namespace app_movie_mvc.Controllers
                 .Include(p => p.Genero)
                 .Include(p => p.ListaReviews)
                 .ThenInclude(r => r.Usuario)
+                .Include(p => p.UusariosFavorito)
                 .FirstOrDefaultAsync(p => p.Id == Id);
 
             if (pelicula == null)

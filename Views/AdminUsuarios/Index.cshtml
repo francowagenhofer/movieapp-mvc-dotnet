@@ -1,0 +1,123 @@
+@model List<app_movie_mvc.Models.UsuarioAdminViewModel>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<div class="d-flex flex-column align-items-center text-center gap-2 mb-3">
+    <div>
+        <h1 class="h3 mb-1">Gestión de Usuarios</h1>
+        <div class="text-white-50 small">Administrá los usuarios registrados en la plataforma.</div>
+    </div>
+</div>
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
+    <div class="review-stats">
+        <strong class="me-2">Total:</strong> <span class="badge bg-secondary">@Model.Count</span>
+    </div>
+</div>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Mensaje"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card app-card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table id="usuariosTable" class="table table-dark table-hover align-middle mb-0 app-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">Avatar</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th class="text-center">Estado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <img src="@usuario.ImagenUrlPerfil" alt="@usuario.Nombre" 
+                                     class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" />
+                            </td>
+                            <td class="fw-semibold">@usuario.Nombre @usuario.Apellido</td>
+                            <td class="text-white-75">@usuario.Email</td>
+                            <td class="text-white-75">
+                                <span class="badge bg-info">@usuario.Roles</span>
+                            </td>
+                                <td class="text-center">
+                                @if (usuario.EstaActivo)
+                                {
+                                    <span class="badge bg-success">Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Suspendido</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-2">
+                                    <a asp-action="Details" asp-route-id="@usuario.Id" 
+                                       class="btn btn-sm app-btn app-btn-ghost">Detalles</a>
+                                    <a asp-action="Contactar" asp-route-id="@usuario.Id"
+                                       class="btn btn-sm app-btn app-btn-ghost">Contactar</a>
+                                    <form asp-action="ToggleSuspension" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@usuario.Id" />
+                                        @if (usuario.EstaActivo)
+                                        {
+                                            <button type="submit" class="btn btn-sm app-btn btn-outline-warning"
+                                                    onclick="return confirm('¿Estás seguro de suspender a este usuario?')">
+                                                Suspender
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-sm app-btn btn-outline-success"
+                                                    onclick="return confirm('¿Estás seguro de activar a este usuario?')">
+                                                Activar
+                                            </button>
+                                        }
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $('#usuariosTable').DataTable({
+                language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
+                columnDefs: [
+                    { orderable: false, targets: [0, 5] }
+                ],
+                order: [[1, 'asc']], // Ordenar por nombre ascendente
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, 'Todos']],
+                drawCallback: function(settings) {
+                    var api = this.api();
+                    var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+                    
+                    // Ocultar paginador si hay 5 o menos registros
+                    if (api.page.info().recordsDisplay <= 5) {
+                        pagination.hide();
+                    } else {
+                        pagination.show();
+                    }
+                }
+            });
+        });
+    </script>
+}

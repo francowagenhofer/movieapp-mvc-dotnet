@@ -1,0 +1,116 @@
+@model List<app_movie_mvc.Models.Pelicula>
+@using app_movie_mvc.Models
+@{
+    ViewData["Title"] = "Mis Películas Favoritas";
+}
+
+<div class="review-container">
+    <header class="mb-3">
+        <h2 class="h3 fw-bold mb-1">Mis Películas Favoritas</h2>
+        <p class="text-white-50 mb-3">
+            Listado de películas marcadas como favoritas.
+        </p>
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+            <div class="review-stats">
+                <strong class="me-2">Total:</strong> <span class="badge bg-secondary">@(Model?.Count ?? 0)</span>
+            </div>
+
+            <div class="review-search w-md-auto">
+                <div class="input-group input-group-sm">
+                    <input id="review-search" type="search" class="form-control" placeholder="Buscar por película..." aria-label="Buscar reseñas por película" />
+                    <button id="review-clear" type="button" class="btn btn-outline-secondary">Limpiar</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">Aún no tienes películas favoritas.</div>
+    }
+    else
+    {
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3">
+            @foreach (var pelicula in Model)
+            {
+                var reviews = pelicula.ListaReviews ?? new List<Review>();
+                var ratingPromedio = reviews.Count > 0 ? Math.Round(reviews.Average(r => r.Rating), 1) : 0;
+                var favCount = pelicula.UusariosFavorito?.Count ?? 0;
+
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden" style="max-width: 180px;" data-movie-title="@pelicula.Titulo">
+                        <a asp-controller="Home" asp-action="Details" asp-route-id="@pelicula.Id" class="text-decoration-none">
+                            <div class="position-relative">
+                                <img alt="@pelicula.Titulo" class="card-img-top" src="@pelicula.PosterUrlPortada" style="height: 230px; object-fit: cover;" />
+                            </div>
+                        </a>
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-1 text-truncate" title="@pelicula.Titulo">@pelicula.Titulo</h6>
+
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="review-rating-compact">
+                                    <span class="material-symbols-outlined star-filled me-1">star</span>
+                                    <span class="review-rating-number">@ratingPromedio.ToString("0.0")</span>
+                                </div>
+                                <div class="d-inline-flex align-items-center gap-1">
+                                    <span class="material-symbols-outlined" style="font-size:18px;line-height:1;color:#ff3b30;">favorite</span>
+                                    <span class="small text-white-50">@favCount</span>
+                                </div>
+                            </div>
+
+                            <form asp-controller="Favoritos" asp-action="Toggle" method="post" class="mt-2 m-0">
+                                <input type="hidden" name="id" value="@pelicula.Id" />
+                                <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Favoritos")" />
+                                <button type="submit" class="btn btn-sm btn-dark w-100 rounded-3" style="background: linear-gradient(180deg, #1f1f1f, #121212); border: 1px solid rgba(255,255,255,.08);">
+                                    <span class="material-symbols-outlined align-middle me-1" style="font-size:18px;">heart_plus</span>
+                                    <span class="align-middle">Quitar</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var input = document.getElementById('review-search');
+            var clearBtn = document.getElementById('review-clear');
+            var cards = document.querySelectorAll('.review-container .card[data-movie-title]');
+
+            function normalize(text) {
+                return (text || '').toString().toLowerCase().trim();
+            }
+
+            function filter() {
+                var q = normalize(input.value);
+                cards.forEach(function (card) {
+                    var title = normalize(card.dataset.movieTitle);
+                    var col = card.closest('.col');
+                    if (!q || title.indexOf(q) !== -1) {
+                        if (col) col.style.display = '';
+                        else card.style.display = '';
+                    } else {
+                        if (col) col.style.display = 'none';
+                        else card.style.display = 'none';
+                    }
+                });
+            }
+
+            if (input) {
+                input.addEventListener('input', filter);
+            }
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    input.value = '';
+                    filter();
+                    input.focus();
+                });
+            }
+        })();
+    </script>
+}
