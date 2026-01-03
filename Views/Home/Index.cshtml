@@ -15,12 +15,18 @@
 <main class="flex-grow-1 home-page">
     <div class="container py-4">
 
+        @* Carrusel de películas destacadas *@
+@*         @if (ViewBag.PeliculasDestacadas != null)
+        {
+            @await Html.PartialAsync("_CarouselPeliculas", (List<Pelicula>)ViewBag.PeliculasDestacadas)
+        } *@
+
         @* panel de filtros *@
         <form method="get">
             <div class="row g-3 mb-4 align-items-center">
                 <div class="col-lg-6">
                     <div class="input-group">
-                        <button type="submit" class="input-group-text">Buscar</button>
+                        <button type="submit" class="input-group-text btn btn-outline-secondary">Buscar</button>
                         <input name="txtBusqueda" value="@busqueda" class="form-control form-control-lg" placeholder="Buscar películas..." type="text" />
                     </div>
                 </div>
@@ -52,7 +58,7 @@
         </form>
 
         @*  listado de tarjetas*? *@
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
+        <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @foreach (var pelicula in Model)
             {
                 var reviews = pelicula.ListaReviews ?? new List<Review>();
@@ -75,17 +81,24 @@
                             </a>
                         </div>
 
-                        <div class="card-body p-2">
+                        <div class="card-body p-2 d-flex flex-column">
+                            @* Título *@
                             <h5 class="card-title fs-6 fw-semibold mb-1 text-truncate" title="@pelicula.Titulo">
                                 <a asp-action="Details" asp-route-id="@pelicula.Id" class="text-decoration-none text-reset">@pelicula.Titulo</a>
                             </h5>
 
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="review-rating-compact">
+                            @* Género de la película *@
+                            @if (pelicula.Genero != null)
+                            {
+                                <p class="movie-genre mb-2 text-truncate">@pelicula.Genero.Descripcion</p>
+                            }
+
+                            @* Rating y Favoritos en la misma línea *@
+                            <div class="mt-auto d-flex align-items-center justify-content-between">
+                                <div class="review-rating-compact d-flex align-items-center">
                                     <span class="material-symbols-outlined star-filled me-1">star</span>
                                     <span class="review-rating-number">@ratingPromedio.ToString("0.0")</span>
                                 </div>
-
 
                                 <div class="d-inline-flex align-items-center">
                                     @if (User?.Identity?.IsAuthenticated == true)
@@ -146,6 +159,9 @@
                 </div>
             </div>
         }
+
+
+
     </div>
 </main>
 

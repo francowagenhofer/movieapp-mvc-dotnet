@@ -7,53 +7,167 @@
     padding-bottom: 1.25rem !important;
 }
 
-/* ===== Header ===== */
-.home-hero {
+/* ===== Carousel ===== */
+.home-page #peliculasCarousel {
+    border-radius: 0.65rem;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    margin-bottom: 2rem;
 }
 
-.home-title {
-    font-size: 1.45rem;
-    font-weight: 750;
-    letter-spacing: .2px;
-    color: rgba(255,255,255,.95);
+.home-page .carousel-image-container {
+    position: relative;
 }
 
-.home-subtitle {
-    font-size: .95rem;
-    color: rgba(255,255,255,.68);
+.home-page .carousel-img {
+    height: 360px; /* Reducido 20% desde 450px */
+    object-fit: cover;
+    object-position: center 30%; /* Mejora el encuadre vertical */
+    filter: brightness(0.7) saturate(1.1);
 }
 
-/* --- Filtros: achicar tamaños sin cambiar HTML --- */
-.home-page .input-group-text {
-    padding: .45rem .65rem;
-    font-size: .9rem;
+.home-page .carousel-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.75) 100%);
 }
 
-.home-page .form-control.form-control-lg {
-    padding: .55rem .8rem;
-    font-size: .95rem;
+.home-page .carousel-caption-custom {
+    bottom: 0;
+    left: 50%;
+    right: auto;
+    top: auto;
+    transform: translateX(-50%); /* Centrado horizontal */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Texto centrado */
+    padding: 2rem;
+    max-width: 800px;
+    width: 100%;
 }
 
-.home-page .form-select.form-select-lg {
-    padding: .55rem 2.25rem .55rem .8rem;
-    font-size: .95rem;
+.home-page .carousel-content-wrapper {
+    animation: fadeInUp 0.6s ease-out;
+    width: 100%;
 }
 
-/* En desktop, que no se estire tanto */
-@media (min-width: 992px) {
-    .home-page select[name="generoId"] {
-        width: 250px;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
-
-    .home-page input[name="txtBusqueda"] {
-        max-width: 480px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* --- Grid: más compacto --- */
-.home-page .row.g-4 {
-    --bs-gutter-x: 1rem;
-    --bs-gutter-y: 1rem;
+.home-page .genre-badge {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    background: rgba(13, 110, 253, 0.85);
+    color: #ffffff; /* Blanco puro */
+    border-radius: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.home-page .carousel-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: white;
+    margin: 0.6rem 0;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.7);
+    line-height: 1.15;
+}
+
+.home-page .carousel-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.home-page .rating-display {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: rgba(255, 193, 7, 0.12);
+    padding: 0.2rem 0.55rem;
+    border-radius: 0.3rem;
+    border: 1px solid rgba(255, 193, 7, 0.25);
+}
+
+.home-page .star-icon {
+    color: #ffc107;
+    font-size: 16px;
+    font-variation-settings: 'FILL' 1;
+}
+
+.home-page .rating-number {
+    font-weight: 700;
+    color: #ffc107;
+    font-size: 0.9rem;
+}
+
+.home-page .rating-total {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.8rem;
+}
+
+.home-page .meta-separator {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.home-page .release-year,
+.home-page .duration {
+    font-weight: 550;
+}
+
+.home-page .carousel-description {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.home-page .carousel-actions {
+    display: flex;
+    gap: 0.65rem;
+}
+
+.home-page .btn-carousel {
+    padding: 0.6rem 1.4rem;
+    font-weight: 650;
+    font-size: 0.9rem;
+    border-radius: 0.35rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 3px 10px rgba(13, 110, 253, 0.35);
+}
+
+.home-page .btn-carousel:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(13, 110, 253, 0.5);
+}
+
+.home-page .btn-carousel-outline {
+    padding: 0.6rem 1.4rem;
+    font-weight: 650;
+    font-size: 0.9rem;
+    border-radius: 0.35rem;
+    border: 1.5px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
 }
 
 /* ===== Cards ===== */
@@ -67,19 +181,18 @@
 .home-page .card {
     border-radius: .40rem !important;
     overflow: hidden;
-    /*background: radial-gradient(120% 120% at 50% 0%, rgba(255,255,255,.06) 0%, rgba(255,255,255,.02) 35%, rgba(0,0,0,.65) 100%);*/    
-    background: radial-gradient( 1000px 320px at 50% 0%, rgba(13,110,253,.06), rgba(33,37,41,.92) );
-    
+    background: radial-gradient(1000px 320px at 50% 0%, rgba(13,110,253,.06), rgba(33,37,41,.92));
     border: 1px solid rgba(255,255,255,.08);
     box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    transform: scale(0.90);
     transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
 }
 
-    .home-page .card:hover {
-        transform: translateY(-3px);
-        border-color: rgba(255,255,255,.14);
-        box-shadow: 0 14px 34px rgba(0,0,0,.45);
-    }
+.home-page .card:hover {
+    transform: scale(0.95);
+    border-color: rgba(255,255,255,.14);
+    box-shadow: 0 14px 34px rgba(0,0,0,.45);
+}
 
 /* “Achicar tarjetas”: menos alto y menos padding */
 .home-page .card-img-top {
@@ -103,7 +216,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: 2.3em;
+    min-height: 1.5rem;
 }
 
 /* Rating */
@@ -112,12 +225,16 @@
     color: rgba(255,255,255,.65) !important;
 }
 
-/* (Opcional) la estrella un toque más alineada */
-.home-page .material-symbols-outlined {
-    vertical-align: middle;
+/* Género de la película */
+.home-page .movie-genre {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.2;
 }
 
-
+/*Paginador*/
 
 /* ===== Pagination (Home) ===== */
 .home-page .pagination-modern {
@@ -155,4 +272,44 @@
     opacity: .45;
     cursor: not-allowed;
     box-shadow: none;
+        }
+ 
+
+/* ===== Filtros compactos (Home) ===== */
+.home-page .input-group .form-control-lg,
+.home-page .input-group .input-group-text {
+    padding: 0.40rem 0.70rem;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    border-radius: 0.42rem;
+    min-height: auto;
+}
+
+.home-page .dropdown .form-select-lg {
+    padding: 0.40rem 2.30rem 0.40rem 0.70rem; /* más espacio a la derecha para la flecha */
+    font-size: 0.95rem;
+    line-height: 1.3;
+    border-radius: 0.42rem;
+    min-height: auto;
+    min-width: 180px; /* evita que el texto se superponga */
+}
+
+/* Buscador más corto (≈50% del contenedor) */
+.home-page form .input-group {
+    width: 60%;
+    max-width: 520px;
+    min-width: 260px;
+}
+
+/* Ajuste responsivo: en móviles vuelve a ocupar todo el ancho */
+@media (max-width: 767.98px) {
+    .home-page form .input-group {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+    }
+
+    .home-page .dropdown .form-select-lg {
+        min-width: 160px;
+    }
 }

@@ -28,9 +28,22 @@ namespace app_movie_mvc.Controllers
         {
             if (pagina < 1) pagina = 1;
 
+            // Obtener películas destacadas (top 4 por rating)
+            var peliculasDestacadas = await _context.Peliculas
+                .Include(p => p.Genero)
+                .Include(p => p.ListaReviews)
+                .Include(p => p.UusariosFavorito)
+                .Where(p => p.ListaReviews.Any())
+                .OrderByDescending(p => p.ListaReviews.Average(r => r.Rating))
+                .Take(4)
+                .ToListAsync();
+
+            ViewBag.PeliculasDestacadas = peliculasDestacadas;
+
             var consulta = _context.Peliculas
                 .Include(p => p.ListaReviews)
                 .Include(p => p.UusariosFavorito)
+                .Include(p => p.Genero)
                 .AsQueryable();
             if (!string.IsNullOrEmpty(txtBusqueda))
             {

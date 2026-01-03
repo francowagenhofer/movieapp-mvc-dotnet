@@ -1,4 +1,3 @@
-using app_movie_mvc.Data;
 using app_movie_mvc.Models;
 using app_movie_mvc.Service;
 using Microsoft.AspNetCore.Http.Features;
@@ -6,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using app_movie_mvc.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

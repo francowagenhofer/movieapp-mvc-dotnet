@@ -31,45 +31,56 @@
     }
     else
     {
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3">
+        <div class="review-list">
             @foreach (var pelicula in Model)
             {
                 var reviews = pelicula.ListaReviews ?? new List<Review>();
                 var ratingPromedio = reviews.Count > 0 ? Math.Round(reviews.Average(r => r.Rating), 1) : 0;
                 var favCount = pelicula.UusariosFavorito?.Count ?? 0;
 
-                <div class="col">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden" style="max-width: 180px;" data-movie-title="@pelicula.Titulo">
-                        <a asp-controller="Home" asp-action="Details" asp-route-id="@pelicula.Id" class="text-decoration-none">
-                            <div class="position-relative">
-                                <img alt="@pelicula.Titulo" class="card-img-top" src="@pelicula.PosterUrlPortada" style="height: 230px; object-fit: cover;" />
-                            </div>
-                        </a>
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-1 text-truncate" title="@pelicula.Titulo">@pelicula.Titulo</h6>
+                <article class="review-card rc-hover mb-3 fav-card" data-movie-title="@pelicula.Titulo">
+                    <div class="review-main">
+                        <img alt="@pelicula.Titulo"
+                             class="review-thumb"
+                             src="@pelicula.PosterUrlPortada" />
 
-                            <div class="d-flex align-items-center justify-content-between">
+                        <div class="review-content">
+                            <div class="review-title-row">
+                                <h5 class="review-title mb-0">@pelicula.Titulo</h5>
+                                <div class="d-inline-flex align-items-center gap-1 ms-2">
+                                    <span class="material-symbols-outlined" style="font-size:18px;line-height:1;color:#ff3b30;">favorite</span>
+                                    @* <span class="small text-white-50">@favCount</span> *@
+                                </div>
+                            </div>
+
+                            <div class="review-meta-row mt-1">
                                 <div class="review-rating-compact">
                                     <span class="material-symbols-outlined star-filled me-1">star</span>
                                     <span class="review-rating-number">@ratingPromedio.ToString("0.0")</span>
                                 </div>
-                                <div class="d-inline-flex align-items-center gap-1">
-                                    <span class="material-symbols-outlined" style="font-size:18px;line-height:1;color:#ff3b30;">favorite</span>
-                                    <span class="small text-white-50">@favCount</span>
-                                </div>
                             </div>
 
-                            <form asp-controller="Favoritos" asp-action="Toggle" method="post" class="mt-2 m-0">
-                                <input type="hidden" name="id" value="@pelicula.Id" />
-                                <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Favoritos")" />
-                                <button type="submit" class="btn btn-sm btn-dark w-100 rounded-3" style="background: linear-gradient(180deg, #1f1f1f, #121212); border: 1px solid rgba(255,255,255,.08);">
-                                    <span class="material-symbols-outlined align-middle me-1" style="font-size:18px;">heart_plus</span>
-                                    <span class="align-middle">Quitar</span>
-                                </button>
-                            </form>
+                            <p class="review-text text-white-50 mb-0">Marcada como favorita.</p>
                         </div>
                     </div>
-                </div>
+
+                    <div class="review-footer d-flex flex-column flex-sm-row gap-2">
+                        <a asp-controller="Home"
+                           asp-action="Details"
+                           asp-route-id="@pelicula.Id"
+                           class="btn btn-sm app-btn app-btn-ghost w-100">
+                            Ver detalle
+                        </a>
+                        <form asp-controller="Favoritos" asp-action="Toggle" method="post" class="m-0 w-100">
+                            <input type="hidden" name="id" value="@pelicula.Id" />
+                            <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Favoritos")" />
+                            <button type="submit" class="btn btn-sm app-btn btn-outline-danger w-100">
+                                <span class="material-symbols-outlined align-middle me-1" style="font-size:18px;">heart_minus</span>
+                                <span class="align-middle">Quitar de favoritos</span>
+                            </button>
+                        </form>
+                    </div>
+                </article>
             }
         </div>
     }
@@ -80,7 +91,7 @@
         (function () {
             var input = document.getElementById('review-search');
             var clearBtn = document.getElementById('review-clear');
-            var cards = document.querySelectorAll('.review-container .card[data-movie-title]');
+            var cards = document.querySelectorAll('.review-container .review-card[data-movie-title]');
 
             function normalize(text) {
                 return (text || '').toString().toLowerCase().trim();
@@ -90,13 +101,10 @@
                 var q = normalize(input.value);
                 cards.forEach(function (card) {
                     var title = normalize(card.dataset.movieTitle);
-                    var col = card.closest('.col');
                     if (!q || title.indexOf(q) !== -1) {
-                        if (col) col.style.display = '';
-                        else card.style.display = '';
+                        card.style.display = '';
                     } else {
-                        if (col) col.style.display = 'none';
-                        else card.style.display = 'none';
+                        card.style.display = 'none';
                     }
                 });
             }

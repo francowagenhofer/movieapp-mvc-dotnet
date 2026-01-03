@@ -1,0 +1,114 @@
+@model List<Pelicula>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No hay películas destacadas para mostrar.</div>
+}
+else
+{
+    <div id="peliculasCarousel" class="carousel slide carousel-fade mb-4" data-bs-ride="carousel">
+        
+        <!-- Indicadores -->
+        <div class="carousel-indicators carousel-indicators-custom">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <button type="button"
+                        data-bs-target="#peliculasCarousel"
+                        data-bs-slide-to="@i"
+                        class="@(i == 0 ? "active" : "")"
+                        aria-current="@(i == 0 ? "true" : "false")"
+                        aria-label="Slide @(i + 1)">
+                </button>
+            }
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner carousel-custom">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var pelicula = Model[i];
+                var reviews = pelicula.ListaReviews ?? new List<Review>();
+                var ratingPromedio = reviews.Count > 0
+                    ? Math.Round(reviews.Average(r => r.Rating), 1)
+                    : 0;
+                
+                <div class="carousel-item @(i == 0 ? "active" : "")" data-bs-interval="4000">
+                    <div class="carousel-image-container">
+                        <img src="@pelicula.PosterUrlPortada" class="d-block w-100 carousel-img" alt="@pelicula.Titulo" />
+                        <div class="carousel-overlay"></div>
+                    </div>
+
+                    <!-- Caption centrado -->
+                    <div class="carousel-caption carousel-caption-custom d-flex align-items-end justify-content-center text-center">
+                        <div class="carousel-content-wrapper w-100">
+                            <!-- Título -->
+                            <h2 class="carousel-title text-white mb-2">@pelicula.Titulo</h2>
+                            
+                            <!-- Meta información -->
+                            <div class="carousel-meta text-white d-flex align-items-center justify-content-center gap-2 mb-3">
+                                @if (pelicula.Genero != null)
+                                {
+                                    <span class="genre-badge">@pelicula.Genero.Descripcion</span>
+                                }
+                                @if (ratingPromedio > 0)
+                                {
+                                    <span class="meta-separator">•</span>
+                                    <div class="rating-display">
+                                        <span class="material-symbols-outlined star-icon">star</span>
+                                        <span class="rating-number">@ratingPromedio.ToString("0.0")</span>
+                                        <span class="rating-total text-white"></span>
+                                    </div>
+                                }
+                                @if (pelicula.FechaLanzamiento != null)
+                                {
+                                    <span class="meta-separator">•</span>
+                                    <span class="release-year text-white">@pelicula.FechaLanzamiento.Year</span>
+                                }
+                            </div>
+
+                            <!-- Sinopsis breve -->
+                            @if (!string.IsNullOrWhiteSpace(pelicula.Sinopsis))
+                            {
+                                <p class="carousel-description text-white d-none d-lg-block">
+                                    @(pelicula.Sinopsis.Length > 120 
+                                        ? pelicula.Sinopsis.Substring(0, 120) + "..." 
+                                        : pelicula.Sinopsis)
+                                </p>
+                            }
+
+                            <!-- Botón de acción -->
+                            <div class="carousel-actions">
+                                <a class="btn btn-primary btn-carousel"
+                                   asp-controller="Home"
+                                   asp-action="Details"
+                                   asp-route-id="@pelicula.Id">
+                                    <span class="material-symbols-outlined me-1" style="font-size: 18px; vertical-align: middle;">play_circle</span>
+                                    Ver detalle
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Controles -->
+        <button class="carousel-control-prev carousel-control-custom" type="button" data-bs-target="#peliculasCarousel" data-bs-slide="prev">
+            <div class="carousel-control-icon-wrapper">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </div>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next carousel-control-custom" type="button" data-bs-target="#peliculasCarousel" data-bs-slide="next">
+            <div class="carousel-control-icon-wrapper">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </div>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+
+
+
+
+
+    </div>
+}
