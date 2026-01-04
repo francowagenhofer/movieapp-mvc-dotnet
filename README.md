@@ -39,14 +39,17 @@ Desarrollado como proyecto portfolio para demostrar competencias en **C#**, **AS
 | **Frontend** | Razor Views, HTML, CSS, Bootstrap |
 | **Control de versiones** | Git / GitHub |
 
-### Paquetes NuGet principales
+### Paquetes NuGet
 
-- `MailKit` – Envío de correos
-- `Microsoft.AspNetCore.Identity.EntityFrameworkCore` – Autenticación y autorización
-- `Microsoft.EntityFrameworkCore` y `Microsoft.EntityFrameworkCore.SqlServer` – Acceso a datos
-- `Microsoft.EntityFrameworkCore.Tools` – Migraciones de base de datos
-- `SixLabors.ImageSharp` – Procesamiento de imágenes
-- `OpenAI` – Integración con IA
+- `Microsoft.AspNetCore.Identity.EntityFrameworkCore` (v9.0.11) – Autenticación y autorización
+- `Microsoft.EntityFrameworkCore` (v9.0.11) – ORM y acceso a datos
+- `Microsoft.EntityFrameworkCore.Design` (v9.0.11) – Herramientas de diseño
+- `Microsoft.EntityFrameworkCore.SqlServer` (v9.0.11) – Proveedor SQL Server
+- `Microsoft.EntityFrameworkCore.Tools` (v9.0.11) – Migraciones de base de datos
+- `Microsoft.VisualStudio.Web.CodeGeneration.Design` (v9.0.11) – Generación de código scaffolding
+- `MailKit` (v4.14.1) – Envío de correos
+- `SixLabors.ImageSharp` (v3.1.12) – Procesamiento de imágenes
+- `OpenAI` (v2.8.0) – Integración con API de IA
 
 ---
 
@@ -62,14 +65,14 @@ Desarrollado como proyecto portfolio para demostrar competencias en **C#**, **AS
 
 1. **Clonar el repositorio:**
 
-````````
+````````bash
 git clone https://github.com/tu-usuario/MovieApp.git
 
 ````````
 
 2. **Restaurar dependencias:**
 
-````````
+````````bash
 cd MovieApp
 dotnet restore
 
@@ -79,14 +82,14 @@ dotnet restore
 
 4. **Ejecutar migraciones de base de datos:**
 
-````````
+````````bash
 dotnet ef database update
 
 ````````
 
 5. **Ejecutar la aplicación:**
 
-````````
+````````bash
 dotnet run
 
 ````````
@@ -104,8 +107,9 @@ http://localhost:5000
 **Franco Wagenhöfer**  
 Desarrollador .NET
 
-- **GitHub:** [francowagenhofer](https://github.com/francowagenhofer)
-- **LinkedIn:** [Agregar link]
+- **Portafolio:** [francowagenhofer.github.io](https://francowagenhofer.github.io/)
+- **GitHub:** [Franco Wagenhöfer](https://github.com/francowagenhofer)
+- **LinkedIn:** [Franco Wagenhöfer](https://www.linkedin.com/in/franco-wagenh%C3%B6fer/)
 
 ---
 
