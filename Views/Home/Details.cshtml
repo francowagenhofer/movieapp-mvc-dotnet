@@ -31,187 +31,185 @@
 }
 
 <main class="movie-details-container">
-    <div class="row g-4 justify-content-center align-items-start">
-        <!-- Poster -->
-        <div class="col-12 col-lg-6">
-            <img alt="@Model.Titulo" class="detail-poster" src="@Model.PosterUrlPortada" />
-        </div>
-
-        <!-- Información de la película -->
-        <div class="col-12 col-lg-6">
-            <div class="detail-info-section">
-                <!-- Título y metadata -->
-                <div>
-                    <h1 class="detail-title d-flex align-items-center justify-content-between">
-                        <span>@Model.Titulo</span>
-                        <span class="d-inline-flex align-items-center">
-                            @if (SignInManager.IsSignedIn(User))
-                            {
-                                <form asp-controller="Favoritos" asp-action="Toggle" method="post" class="m-0">
-                                    <input type="hidden" name="id" value="@Model.Id" />
-                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                    <button type="submit"
-                                            class="btn btn-sm p-1 d-inline-flex align-items-center justify-content-center border-0 bg-transparent"
-                                            style="color:@(isFav ? "#ff3b30" : "#8a8a8a"); box-shadow:none;"
-                                            title="Agregar/Quitar favorito" aria-label="Agregar o quitar favorito">
-                                        <span class="material-symbols-outlined" style="font-size:30px;line-height:1;font-variation-settings:'FILL' @(isFav ? "1" : "0");">favorite</span>
-                                    </button>
-                                </form>
-                            }
-
-                            else
-                            {
-                                <span class="material-symbols-outlined" style="font-size:30px;line-height:1;opacity:.6">favorite</span>
-                            }
-
-
-
-                            <span class="ms-1 small text-white-50">@favCount</span>
-                        </span>
-                    </h1>
-                    <div class="detail-metadata">
-                        <span class="detail-metadata-item">@Model.Genero.Descripcion</span>
-                        <span class="detail-metadata-separator">•</span>
-                        <span class="detail-metadata-item">@horas h @minutos m</span>
-                        <span class="detail-metadata-separator">•</span>
-                        <span class="detail-metadata-item">@anio</span>
-                    </div>
-                </div>
-
-                <!-- Sinopsis -->
-                <p class="detail-synopsis"><strong>Sinopsis:</strong> @Model.Sinopsis</p>
-
-                <!-- Tarjeta de Rating -->
-                <div class="detail-rating-card">
-                    <div class="detail-rating-main">
-
-                        <!-- Score y estrellas -->
-                        <div class="detail-rating-score-section">
-                            <div class="detail-rating-score">@averageRating.ToString("0.0")</div>
-                            <div class="detail-rating-stars">
-                                @for (var i = 1; i <= 5; i++)
-                                {
-                                    var isActive = i <= filledStars;
-                                    var starClass = isActive ? "detail-rating-star active" : "detail-rating-star inactive";
-                                    var icon = isActive ? "star" : "star_border";
-                                    <span class="material-symbols-outlined @starClass">@icon</span>
-                                }
-                            </div>
-                            <p class="detail-rating-count">@reviewCount @(reviewCount == 1 ? "reseña" : "reseñas")</p>
-                        </div>
-
-                        <!-- Distribución de ratings -->
-                        <div class="detail-rating-bars">
-                            @for (int rating = 5; rating >= 1; rating--)
-                            {
-                                int count = reviews.Count(r => r.Rating == rating);
-                                double percentage = reviewCount > 0 ? Math.Round((double)count * 100 / reviewCount, 1) : 0;
-                                var widthValue = percentage.ToString("0.0", CultureInfo.InvariantCulture);
-                                <div class="detail-rating-row">
-                                    <span class="detail-rating-label">@rating</span>
-                                    <div class="detail-rating-bar-container">
-                                        <div class="detail-rating-bar" style="width: @widthValue%"></div>
-                                    </div>
-                                    <span class="detail-rating-percentage">@percentage.ToString("0.0")%</span>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Botones de acción -->
-                <div class="detail-action-buttons">
-                    <button onclick="cargarLlm('Resumen', '@Model.Titulo')" class="detail-action-btn detail-action-btn-primary">
-                        <span class="material-symbols-outlined">auto_awesome</span>
-                        <span>Resumen IA</span>
-                    </button>
-                    <button onclick="cargarLlm('Spoiler', '@Model.Titulo')" class="detail-action-btn detail-action-btn-secondary">
-                        <span class="material-symbols-outlined">movie</span>
-                        <span>Spoiler</span>
-                    </button>
-                    <button @(ViewBag.UserReview ? "disabled" : "") class="detail-action-btn detail-action-btn-secondary"
-                            type="button" data-bs-toggle="modal" data-bs-target="#createReviewModal">
-                        <span class="material-symbols-outlined">add_notes</span>
-                        <span>Reseña</span>
-                    </button>
-                </div>
-
-                <!-- Mensajes de alerta -->
-                @if (TempData["ReviewExiste"] != null)
-                {
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        @TempData["ReviewExiste"]
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                }
-
+    <div class="movie-details-shell">
+        <div class="row g-4 justify-content-center align-items-start">
+            <!-- Poster -->
+            <div class="col-12 col-lg-4 d-flex justify-content-center">
+                <img alt="@Model.Titulo" class="detail-poster" src="@Model.PosterUrlPortada" />
             </div>
-        </div>
-    </div>
-    @if (Model.ListaReviews != null && Model.ListaReviews.Count > 0)
-    {
-        <section class="detail-reviews-section mt-4">
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-10">
-                    <h2 class="detail-reviews-title">
-                        Reseñas de la comunidad
-                    </h2>
-                </div>
 
-                <div class="col-12 col-lg-10">
-                    <div class="row detail-reviews-grid g-3">
-                        @foreach (var item in Model.ListaReviews)
-                        {
-                            <div class="col-12 col-md-5 col-lg-5">
-                                <div class="detail-review-item">
-                                    <!-- Header del review -->
-                                    <div class="detail-review-header">
-                                        <img alt="@item.Usuario.Nombre"
-                                             class="detail-review-avatar"
-                                             src="@(string.IsNullOrEmpty(item.Usuario.ImagenUrlPerfil) ? "/images/default-avatar.png" : item.Usuario.ImagenUrlPerfil)"
-                                             onerror="this.src='/images/default-avatar.png'" />
+            <div class="col-12 col-lg-8">
+                <div class="detail-info-section">
+                    <div>
+                        <h1 class="detail-title d-flex align-items-start justify-content-between">
+                            <span>@Model.Titulo</span>
+                            <span class="detail-meta-actions">
+                                @if (SignInManager.IsSignedIn(User))
+                                {
+                                    <form asp-controller="Favoritos" asp-action="Toggle" method="post" class="detail-fav-form">
+                                        <input type="hidden" name="id" value="@Model.Id" />
+                                        <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                        <button type="submit"
+                                                class="detail-pill detail-pill-fav detail-fav-btn @(isFav ? "active" : "")"
+                                                title="Agregar/Quitar favorito" aria-label="Agregar o quitar favorito">
+                                            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' @(isFav ? "1" : "0");">favorite</span>
+                                            <span class="detail-pill-number">@favCount</span>
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="detail-pill detail-pill-fav disabled">
+                                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 0;">favorite</span>
+                                        <span class="detail-pill-number">@favCount</span>
+                                    </span>
+                                }
 
-                                        <div class="detail-review-user">
-                                            <h5 class="detail-review-username">
-                                                @string.Concat(item.Usuario.Nombre, " ", item.Usuario.Apellido)
-                                            </h5>
-                                            <small class="detail-review-date">
-                                                @item.FechaReview.ToShortDateString()
-                                            </small>
-                                        </div>
+                                <span class="detail-pill detail-pill-rating">
+                                    <span class="material-symbols-outlined">star</span>
+                                    <span class="detail-pill-number">@averageRating.ToString("0.0")</span>
+                                    <span class="detail-pill-sub">(@reviewCount)</span>
+                                </span>
+                            </span>
+                        </h1>
 
-                                        <div class="review-rating-compact">
-                                            <span class="material-symbols-outlined star-filled me-1">star</span>
-                                            <span class="review-rating-number">@item.Rating</span>
-                                        </div>
-                                    </div>
+                        <div class="detail-metadata">
+                            <span class="detail-metadata-item">@Model.Genero.Descripcion</span>
+                            <span class="detail-metadata-separator">•</span>
+                            <span class="detail-metadata-item">@horas h @minutos m</span>
+                            <span class="detail-metadata-separator">•</span>
+                            <span class="detail-metadata-item">@anio</span>
+                        </div>
+                    </div>
 
-                                    <p class="detail-review-comment">@item.Comentario</p>
+                    <!-- Sinopsis -->
+                    <p class="detail-synopsis"><strong>Sinopsis:</strong> @Model.Sinopsis</p>
 
-                                    @if (SignInManager.IsSignedIn(User))
+                    <!-- Tarjeta de Rating -->
+                    <div class="detail-rating-card">
+                        <div class="detail-rating-main">
+                            <div class="detail-rating-score-section">
+                                <div class="detail-rating-score">@averageRating.ToString("0.0")</div>
+                                <div class="detail-rating-stars">
+                                    @for (var i = 1; i <= 5; i++)
                                     {
-                                        if (UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin").Result)
-                                        {
-                                            <div class="detail-review-actions">
-                                                <a asp-controller="Review"
-                                                   asp-action="Edit"
-                                                   asp-route-id="@item.Id"
-                                                   class="detail-review-edit-btn">
-                                                    <span class="material-symbols-outlined">edit</span>
-                                                    Editar como administrador
-                                                </a>
-                                            </div>
-                                        }
+                                        var isActive = i <= filledStars;
+                                        var starClass = isActive ? "detail-rating-star active" : "detail-rating-star inactive";
+                                        var icon = isActive ? "star" : "star_border";
+                                        <span class="material-symbols-outlined @starClass">@icon</span>
                                     }
                                 </div>
+                                <p class="detail-rating-count">@reviewCount @(reviewCount == 1 ? "reseña" : "reseñas")</p>
                             </div>
-                        }
+
+                            <div class="detail-rating-bars">
+                                @for (int rating = 5; rating >= 1; rating--)
+                                {
+                                    int count = reviews.Count(r => r.Rating == rating);
+                                    double percentage = reviewCount > 0 ? Math.Round((double)count * 100 / reviewCount, 1) : 0;
+                                    var widthValue = percentage.ToString("0.0", CultureInfo.InvariantCulture);
+                                    <div class="detail-rating-row">
+                                        <span class="detail-rating-label">@rating</span>
+                                        <div class="detail-rating-bar-container">
+                                            <div class="detail-rating-bar" style="width: @widthValue%"></div>
+                                        </div>
+                                        <span class="detail-rating-percentage">@percentage.ToString("0.0")%</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="detail-action-buttons">
+                        <button onclick="cargarLlm('Resumen', '@Model.Titulo')" class="detail-action-btn detail-action-btn-primary">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <span>Resumen IA</span>
+                        </button>
+                        <button onclick="cargarLlm('Spoiler', '@Model.Titulo')" class="detail-action-btn detail-action-btn-secondary w-100">
+                            <span class="material-symbols-outlined">movie</span>
+                            <span>Spoiler</span>
+                        </button>
+                        <button @(ViewBag.UserReview ? "disabled" : "") class="detail-action-btn detail-action-btn-secondary w-100"
+                                type="button" data-bs-toggle="modal" data-bs-target="#createReviewModal">
+                            <span class="material-symbols-outlined">add_notes</span>
+                            <span>Reseña</span>
+                        </button>
+                    </div>
+
+                    @if (TempData["ReviewExiste"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ReviewExiste"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
                 </div>
             </div>
-        </section>
-    }
+        </div>
 
+        @if (Model.ListaReviews != null && Model.ListaReviews.Count > 0)
+        {
+            <section class="detail-reviews-section mt-4">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <h2 class="detail-reviews-title">
+                            Reseñas de la comunidad
+                        </h2>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="row detail-reviews-grid g-3">
+                            @foreach (var item in Model.ListaReviews)
+                            {
+                                <div class="col-12 col-md-6 col-lg-6">
+                                    <div class="detail-review-item">
+                                        <div class="detail-review-header">
+                                            <img alt="@item.Usuario.Nombre"
+                                                 class="detail-review-avatar"
+                                                 src="@(string.IsNullOrEmpty(item.Usuario.ImagenUrlPerfil) ? "/images/default-avatar.png" : item.Usuario.ImagenUrlPerfil)"
+                                                 onerror="this.src='/images/default-avatar.png'" />
+
+                                            <div class="detail-review-user">
+                                                <h5 class="detail-review-username">
+                                                    @string.Concat(item.Usuario.Nombre, " ", item.Usuario.Apellido)
+                                                </h5>
+                                                <small class="detail-review-date">
+                                                    @item.FechaReview.ToShortDateString()
+                                                </small>
+                                            </div>
+
+                                            <div class="review-rating-compact">
+                                                <span class="material-symbols-outlined star-filled me-1">star</span>
+                                                <span class="review-rating-number">@item.Rating</span>
+                                            </div>
+                                        </div>
+
+                                        <p class="detail-review-comment">@item.Comentario</p>
+
+                                        @if (SignInManager.IsSignedIn(User))
+                                        {
+                                            if (UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin").Result)
+                                            {
+                                                <div class="detail-review-actions">
+                                                    <a asp-controller="Review"
+                                                       asp-action="Edit"
+                                                       asp-route-id="@item.Id"
+                                                       class="detail-review-edit-btn">
+                                                        <span class="material-symbols-outlined">edit</span>
+                                                        Editar como administrador
+                                                    </a>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+        }
+    </div>
 </main>
 
 @{

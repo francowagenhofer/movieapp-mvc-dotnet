@@ -1,8 +1,16 @@
 @model List<app_movie_mvc.Models.Pelicula>
 @using app_movie_mvc.Models
+@using Microsoft.IdentityModel.Tokens
+
 @{
     ViewData["Title"] = "Mis Películas Favoritas";
 }
+
+<style>
+    .view-toggle-btn span {
+        font-size: 18px !important;
+    }
+</style>
 
 <div class="review-container">
     <header class="mb-3">
@@ -19,13 +27,25 @@
                 <strong class="me-2">Total:</strong> <span class="badge bg-secondary">@(Model?.Count ?? 0)</span>
             </div>
 
-            <div class="review-search w-md-auto">
+            <div class="d-flex gap-2">
+                @if (!Model.IsNullOrEmpty())
+                {
+                    <div class="d-flex gap-1">
+                        <button id="view-cards-btn" class="btn btn-sm app-btn active view-toggle-btn" title="Ver como cards">
+                            <span class="material-symbols-outlined">dashboard</span>
+                        </button>
+                        <button id="view-table-btn" class="btn btn-sm app-btn view-toggle-btn" title="Ver como tabla">
+                            <span class="material-symbols-outlined">table_chart</span>
+                        </button>
+                    </div>
+                }
+
                 <div class="input-group input-group-sm">
-                    <input id="review-search" type="search" class="form-control" placeholder="Buscar por película..." aria-label="Buscar reseñas por película" />
+                    <input id="review-search" type="search" class="form-control" placeholder="Buscar por película..." aria-label="Buscar películas favoritas" />
                     <button id="review-clear" type="button" class="btn btn-outline-secondary">Limpiar</button>
                 </div>
             </div>
-        </div>
+            </div>
     </header>
 
     @if (Model == null || !Model.Any())
@@ -34,7 +54,7 @@
     }
     else
     {
-        <div class="review-list">
+        <div id="cards-view" class="review-list">
             @foreach (var pelicula in Model)
             {
                 var reviews = pelicula.ListaReviews ?? new List<Review>();
@@ -52,7 +72,6 @@
                                 <h5 class="review-title mb-0">@pelicula.Titulo</h5>
                                 <div class="d-inline-flex align-items-center gap-1 ms-2">
                                     <span class="material-symbols-outlined" style="font-size:18px;line-height:1;color:#ff3b30;">favorite</span>
-                                    @* <span class="small text-white-50">@favCount</span> *@
                                 </div>
                             </div>
 
@@ -86,6 +105,69 @@
                 </article>
             }
         </div>
+
+        <div id="table-view" class="card app-card" style="display: none;">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle mb-0 app-table">
+                        <thead>
+                            <tr>
+                                <th>Película</th>
+                                <th class="text-center">Carátula</th>
+                                <th class="text-center">Calificación</th>
+                                <th>Estado</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var pelicula in Model)
+                            {
+                                var reviews = pelicula.ListaReviews ?? new List<Review>();
+                                var ratingPromedio = reviews.Count > 0 ? Math.Round(reviews.Average(r => r.Rating), 1) : 0;
+
+                                <tr data-movie-title="@pelicula.Titulo">
+                                    <td class="fw-semibold">@pelicula.Titulo</td>
+                                    <td class="text-center">
+                                        <img alt="@pelicula.Titulo"
+                                             class="logo-thumb"
+                                             src="@pelicula.PosterUrlPortada"
+                                             style="height: 50px; width: auto; object-fit: contain;" />
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="review-rating-compact">
+                                            <span class="material-symbols-outlined star-filled me-1">star</span>
+                                            <span class="review-rating-number">@ratingPromedio.ToString("0.0")</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-white-75">
+                                        <span class="text-truncate d-block" style="max-width: 200px;">
+                                            Marcada como favorita
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-inline-flex gap-2">
+                                            <a asp-controller="Home"
+                                               asp-action="Details"
+                                               asp-route-id="@pelicula.Id"
+                                               class="btn btn-sm app-btn app-btn-ghost">
+                                                Ver detalle
+                                            </a>
+                                            <form asp-controller="Favoritos" asp-action="Toggle" method="post" class="m-0 d-inline">
+                                                <input type="hidden" name="id" value="@pelicula.Id" />
+                                                <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Favoritos")" />
+                                                <button type="submit" class="btn btn-sm app-btn btn-outline-danger">
+                                                    Quitar
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     }
 </div>
 
@@ -94,33 +176,79 @@
         (function () {
             var input = document.getElementById('review-search');
             var clearBtn = document.getElementById('review-clear');
-            var cards = document.querySelectorAll('.review-container .review-card[data-movie-title]');
+            var cardsView = document.getElementById('cards-view');
+            var tableView = document.getElementById('table-view');
+            var cardsBtnEl = document.getElementById('view-cards-btn');
+            var tableBtnEl = document.getElementById('view-table-btn');
 
             function normalize(text) {
                 return (text || '').toString().toLowerCase().trim();
             }
 
-            function filter() {
+            function filterView() {
                 var q = normalize(input.value);
-                cards.forEach(function (card) {
-                    var title = normalize(card.dataset.movieTitle);
-                    if (!q || title.indexOf(q) !== -1) {
-                        card.style.display = '';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+                
+                if (cardsView && cardsView.style.display !== 'none') {
+                    var cardList = cardsView.querySelectorAll('.review-card');
+                    cardList.forEach(function (card) {
+                        var title = normalize(card.dataset.movieTitle);
+                        if (!q || title.indexOf(q) !== -1) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                } else if (tableView) {
+                    var tableRows = tableView.querySelectorAll('tbody tr');
+                    tableRows.forEach(function (row) {
+                        var title = normalize(row.dataset.movieTitle);
+                        if (!q || title.indexOf(q) !== -1) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                }
+            }
+
+            function switchToCards() {
+                if (cardsView && tableView) {
+                    cardsView.style.display = '';
+                    tableView.style.display = 'none';
+                    cardsBtnEl.classList.add('active');
+                    tableBtnEl.classList.remove('active');
+                    filterView();
+                }
+            }
+
+            function switchToTable() {
+                if (cardsView && tableView) {
+                    cardsView.style.display = 'none';
+                    tableView.style.display = '';
+                    tableBtnEl.classList.add('active');
+                    cardsBtnEl.classList.remove('active');
+                    filterView();
+                }
             }
 
             if (input) {
-                input.addEventListener('input', filter);
+                input.addEventListener('input', filterView);
             }
+            
             if (clearBtn) {
                 clearBtn.addEventListener('click', function () {
                     input.value = '';
-                    filter();
+                    filterView();
                     input.focus();
                 });
+            }
+
+            if (cardsBtnEl) {
+                cardsBtnEl.addEventListener('click', switchToCards);
+            }
+
+            if (tableBtnEl) {
+                tableBtnEl.addEventListener('click', switchToTable);
             }
         })();
     </script>

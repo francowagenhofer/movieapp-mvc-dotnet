@@ -1,41 +1,129 @@
 ﻿/* Estilos propios para la vista de detalles de película */
 
 .movie-details-container {
-    padding: 1rem 0;
+    padding: 2rem 0 1.5rem;
     justify-content: center;
-    max-width: 90%;
+}
+
+.movie-details-shell {
+    max-width: 980px;
     margin: 0 auto;
+    width: 100%;
+    padding: 0 1rem;
 }
 
-.detail-review-meta p {
-    line-height: 1.2;
+.detail-info-section {
+    margin-top: 0.15rem;
+    padding: 0.15rem 0 0.85rem;
 }
 
-.detail-review-meta .star-filled {
-    color: #ffc107;
+.detail-title-block {
+    margin-bottom: 0.35rem; /* menor distancia con los datos */
 }
 
-.detail-review-list-group {
+.detail-title-line {
     display: flex;
-    flex-direction: column;
-    gap: 0.55rem;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 0.25rem 0;
 }
 
-.detail-review-list-item {
-    border-radius: 0.65rem;
-    border: 1px solid rgba(79, 172, 254, 0.18);
-    background: rgba(79, 172, 254, 0.07);
-    color: rgba(255, 255, 255, 0.9);
-    padding: 0.85rem 1rem;
+.detail-title-text {
+    font-size: 1.95rem;
+    font-weight: 800;
+    line-height: 1.1;
 }
 
-.detail-review-list-item strong {
+.detail-title-badges {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.detail-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.32rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.86rem;
+    line-height: 1;
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.06);
+    color: #eaeaea;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+}
+
+.detail-pill .material-symbols-outlined {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
+.detail-pill-number {
     font-weight: 700;
 }
 
-.detail-review-list-item .material-symbols-outlined.star-filled {
-    color: #ffc107;
-    font-size: 1.1rem;
+.detail-pill-sub {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.detail-pill-fav {
+    background: rgba(255, 59, 48, 0.18);
+    color: #ff948a;
+    border-color: rgba(255, 59, 48, 0.32);
+}
+
+.detail-pill-fav.active {
+    background: rgba(255, 59, 48, 0.24);
+    color: #ff7a70;
+    border-color: rgba(255, 59, 48, 0.42);
+}
+
+.detail-pill-fav.disabled {
+    opacity: 0.65;
+}
+
+.detail-pill-rating {
+    background: rgba(255, 193, 7, 0.22);
+    color: #ffd666;
+    border-color: rgba(255, 193, 7, 0.36);
+}
+
+.detail-fav-form {
+    margin: 0;
+    display: inline-flex;
+}
+
+.detail-fav-btn {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+
+.detail-fav-btn:focus-visible {
+    outline: 2px solid rgba(255, 138, 128, 0.8);
+    outline-offset: 2px;
+}
+
+.detail-metadata {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.72);
+    margin-bottom: 0.65rem;
+}
+
+.detail-poster {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 3px; /* borde 3px */
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    object-fit: cover;
 }
 
 /* Tarjeta de rating */
@@ -44,9 +132,10 @@
     border: 1px solid rgba(13, 110, 253, 0.15);
     border-radius: 0.65rem;
     padding: 1.5rem;
-    max-width: 600px;
+    max-width: 100%;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
+    margin-top: 1.1rem; /* más distancia desde los datos a la tarjeta */
 }
 
 .detail-rating-card:hover {
@@ -151,18 +240,17 @@
     font-weight: 500;
 }
 
-/* Botones de acción */
+/* Botones de acción: mismo ancho que la tarjeta y 3 columnas iguales */
 .detail-action-buttons {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.65rem;
-    flex-wrap: wrap;
-    margin: 0.75rem 0;
-    max-width: 520px;
+    margin: 0.9rem 0;
+    width: 100%;
 }
 
 .detail-action-btn {
-    flex: 1;
-    min-width: 130px;
+    width: 100%;
     padding: 0.55rem 0.9rem;
     font-weight: 600;
     font-size: 0.9rem;
@@ -254,6 +342,9 @@
     padding-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     width: 100%;
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .detail-reviews-title {
@@ -358,7 +449,11 @@
 
 /* Responsive */
 @media (max-width: 992px) {
-    .detail-title {
+    .detail-poster {
+        max-width: 260px;
+    }
+
+    .detail-title-text {
         font-size: 1.75rem;
     }
 
@@ -372,30 +467,16 @@
     }
 
     .detail-action-buttons {
-        max-width: 100%;
-    }
-
-    .detail-action-btn {
-        min-width: auto;
-    }
-}
-
-@media (max-width: 768px) {
-    .detail-action-buttons {
-        flex-direction: row;
-    }
-
-    .detail-action-btn {
-        flex: 1;
+        grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 576px) {
     .movie-details-container {
-        padding: 0.75rem 0;
+        padding: 1.25rem 0 1rem;
     }
 
-    .detail-title {
+    .detail-title-text {
         font-size: 1.5rem;
     }
 
@@ -415,14 +496,5 @@
 
     .detail-review-item {
         padding: 0.75rem;
-    }
-
-    .detail-action-buttons {
-        flex-direction: column;
-        max-width: 100%;
-    }
-
-    .detail-action-btn {
-        min-width: auto;
     }
 }
