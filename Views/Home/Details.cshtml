@@ -50,7 +50,7 @@
                                         <input type="hidden" name="id" value="@Model.Id" />
                                         <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
                                         <button type="submit"
-                                                class="detail-pill detail-pill-fav detail-fav-btn @(isFav ? "active" : "")"
+                                                class="detail-fav-btn @(isFav ? "active" : "")"
                                                 title="Agregar/Quitar favorito" aria-label="Agregar o quitar favorito">
                                             <span class="material-symbols-outlined" style="font-variation-settings:'FILL' @(isFav ? "1" : "0");">favorite</span>
                                             <span class="detail-pill-number">@favCount</span>
@@ -61,15 +61,8 @@
                                 {
                                     <span class="detail-pill detail-pill-fav disabled">
                                         <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 0;">favorite</span>
-                                        <span class="detail-pill-number">@favCount</span>
                                     </span>
                                 }
-
-                                <span class="detail-pill detail-pill-rating">
-                                    <span class="material-symbols-outlined">star</span>
-                                    <span class="detail-pill-number">@averageRating.ToString("0.0")</span>
-                                    <span class="detail-pill-sub">(@reviewCount)</span>
-                                </span>
                             </span>
                         </h1>
 
@@ -276,3 +269,12 @@
         }
     </script>
 }
+
+<style>
+    .detail-fav-btn .detail-pill-number {
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.7);
+    }
+</style>
+

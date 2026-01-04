@@ -56,10 +56,10 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
 }
 
-.detail-pill .material-symbols-outlined {
-    font-size: 1.05rem;
-    line-height: 1;
-}
+    .detail-pill .material-symbols-outlined {
+        font-size: 1.35rem; /* agrandado */
+        line-height: 1;
+    }
 
 .detail-pill-number {
     font-weight: 700;
@@ -67,7 +67,7 @@
 
 .detail-pill-sub {
     font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.82);
 }
 
 .detail-pill-fav {
@@ -76,15 +76,19 @@
     border-color: rgba(255, 59, 48, 0.32);
 }
 
-.detail-pill-fav.active {
-    background: rgba(255, 59, 48, 0.24);
-    color: #ff7a70;
-    border-color: rgba(255, 59, 48, 0.42);
-}
+    .detail-pill-fav .material-symbols-outlined {
+        color: #8a8a8a;
+    }
 
-.detail-pill-fav.disabled {
-    opacity: 0.65;
-}
+    .detail-pill-fav.active {
+        background: rgba(255, 59, 48, 0.24);
+        color: #ff7a70;
+        border-color: rgba(255, 59, 48, 0.42);
+    }
+
+    .detail-pill-fav.disabled {
+        opacity: 0.65;
+    }
 
 .detail-pill-rating {
     background: rgba(255, 193, 7, 0.22);
@@ -102,12 +106,40 @@
     background: transparent;
     padding: 0;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
 }
 
-.detail-fav-btn:focus-visible {
-    outline: 2px solid rgba(255, 138, 128, 0.8);
-    outline-offset: 2px;
-}
+    .detail-fav-btn .material-symbols-outlined {
+        font-size: 1.5rem;
+        line-height: 1;
+        transition: color 0.2s ease;
+        color: #9ca3af;
+    }
+
+    .detail-fav-btn.active .material-symbols-outlined {
+        color: #ef4444;
+    }
+
+    .detail-fav-btn .detail-pill-number {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .detail-fav-btn:hover .material-symbols-outlined {
+        color: #d1d5db;
+    }
+
+    .detail-fav-btn.active:hover .material-symbols-outlined {
+        color: #dc2626;
+    }
+
+    .detail-fav-btn:focus-visible {
+        outline: 2px solid rgba(255, 138, 128, 0.8);
+        outline-offset: 2px;
+    }
 
 .detail-metadata {
     display: flex;
@@ -138,10 +170,10 @@
     margin-top: 1.1rem; /* más distancia desde los datos a la tarjeta */
 }
 
-.detail-rating-card:hover {
-    border-color: rgba(13, 110, 253, 0.25);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
+    .detail-rating-card:hover {
+        border-color: rgba(13, 110, 253, 0.25);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
 
 .detail-rating-main {
     display: flex;
@@ -266,21 +298,21 @@
     overflow: hidden;
 }
 
-.detail-action-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.5s ease;
-    z-index: 1;
-}
+    .detail-action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s ease;
+        z-index: 1;
+    }
 
-.detail-action-btn:hover::before {
-    left: 100%;
-}
+    .detail-action-btn:hover::before {
+        left: 100%;
+    }
 
 .detail-action-btn-primary {
     background: #0d6efd;
@@ -289,16 +321,16 @@
     box-shadow: 0 2px 8px rgba(13, 110, 253, 0.2);
 }
 
-.detail-action-btn-primary:hover {
-    background: #0b5ed7;
-    border-color: #0b5ed7;
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-    transform: translateY(-1px);
-}
+    .detail-action-btn-primary:hover {
+        background: #0b5ed7;
+        border-color: #0b5ed7;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        transform: translateY(-1px);
+    }
 
-.detail-action-btn-primary:active {
-    transform: translateY(0);
-}
+    .detail-action-btn-primary:active {
+        transform: translateY(0);
+    }
 
 .detail-action-btn-secondary {
     background: rgba(13, 110, 253, 0.1);
@@ -307,17 +339,17 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.detail-action-btn-secondary:hover {
-    background: rgba(13, 110, 253, 0.15);
-    border-color: rgba(13, 110, 253, 0.3);
-    color: rgba(13, 172, 240, 1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-1px);
-}
+    .detail-action-btn-secondary:hover {
+        background: rgba(13, 110, 253, 0.15);
+        border-color: rgba(13, 110, 253, 0.3);
+        color: rgba(13, 172, 240, 1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transform: translateY(-1px);
+    }
 
-.detail-action-btn-secondary:active {
-    transform: translateY(0);
-}
+    .detail-action-btn-secondary:active {
+        transform: translateY(0);
+    }
 
 .detail-action-btn:disabled {
     opacity: 0.5;
@@ -497,4 +529,11 @@
     .detail-review-item {
         padding: 0.75rem;
     }
+}
+
+
+.detail-fav-btn .detail-pill-number {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
 }
