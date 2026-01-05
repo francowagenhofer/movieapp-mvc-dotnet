@@ -1,15 +1,15 @@
 ﻿# MovieApp – ASP.NET MVC (.NET)
 
-Aplicación web desarrollada con **ASP.NET MVC** que permite gestionar un catálogo de películas mediante operaciones CRUD. El proyecto demuestra buenas prácticas en arquitectura MVC, validaciones robustas, autenticación segura y una interfaz clara.
+Aplicación web desarrollada con ASP.NET MVC que permite gestionar un catálogo de películas mediante operaciones CRUD. El proyecto aplica buenas prácticas de arquitectura MVC, validaciones, autenticación y una interfaz clara.
 
-Desarrollado como proyecto portfolio para demostrar competencias en **C#**, **ASP.NET MVC**, **Entity Framework** y **SQL Server**.
+Desarrollado como proyecto de práctica y portfolio para aplicar y consolidar conocimientos en C#, ASP.NET MVC, Entity Framework, ASP.NET Identity y SQL Server.
 
 ---
 
 ## 🎬 Funcionalidades principales
 
 - **Gestión completa de películas (CRUD)**  
-  Alta, edición, eliminación y visualización de películas, con relaciones a géneros y plataformas.
+  Alta, edición, eliminación y visualización de películas, con relaciones a géneros, plataformas y usuarios.
 
 - **Administración de entidades auxiliares**  
   Gestión de géneros, plataformas y usuarios (acceso restringido a administradores).
@@ -35,6 +35,7 @@ Desarrollado como proyecto portfolio para demostrar competencias en **C#**, **AS
 | **Lenguaje** | C# |
 | **Framework** | ASP.NET MVC (.NET 9) |
 | **ORM** | Entity Framework Core |
+| **Autenticación** | ASP.NET Identity |
 | **Base de datos** | SQL Server |
 | **Frontend** | Razor Views, HTML, CSS, Bootstrap |
 | **Control de versiones** | Git / GitHub |
@@ -65,34 +66,30 @@ Desarrollado como proyecto portfolio para demostrar competencias en **C#**, **AS
 
 1. **Clonar el repositorio:**
 
-````````bash
-git clone https://github.com/tu-usuario/MovieApp.git
-
-````````
+    ```bash
+    git clone https://github.com/tu-usuario/MovieApp.git
+    ```
 
 2. **Restaurar dependencias:**
 
-````````bash
-cd MovieApp
-dotnet restore
-
-````````
+    ```bash
+    cd MovieApp
+    dotnet restore
+    ```
 
 3. **Configurar la cadena de conexión en `appsettings.json`:**
 
 4. **Ejecutar migraciones de base de datos:**
 
-````````bash
-dotnet ef database update
-
-````````
+    ```bash
+    dotnet ef database update
+    ```
 
 5. **Ejecutar la aplicación:**
 
-````````bash
-dotnet run
-
-````````
+    ```bash
+    dotnet run
+    ```
 
 6. **Abrir en el navegador:**
 
@@ -115,4 +112,5 @@ Desarrollador .NET
 
 ## 📄 Licencia
 
-Este proyecto se distribuye bajo la licencia **MIT**.
+Proyecto realizado con fines prácticos, de uso libre.
+
