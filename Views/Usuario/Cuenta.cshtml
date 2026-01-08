@@ -1,6 +1,7 @@
 @model AdministrarCuentaViewModel
 
 @{
+    ViewData["Title"] = "Administrar cuenta";
     string mensaje = ViewData["Mensaje"] as string ?? TempData["Mensaje"] as string ?? "";
 }
 
@@ -20,13 +21,10 @@
 
                 <div class="card app-auth-card app-profile-card p-4 rounded-3">
 
-                    <!-- Encabezado de Cuenta -->
                     <div class="text-center mb-4 pb-3 border-bottom border-secondary border-opacity-10">
                         <h2 class="h5 fw-bold mb-1">Administración de Cuenta</h2>
                         <p class="text-secondary mb-0">@Model.Email</p>
                     </div>
-
-                    <!-- Información de la Cuenta -->
                     <div class="mb-4">
                         <h3 class="h6 fw-bold mb-3">Información de tu cuenta</h3>
                         <div class="row g-3">
@@ -109,10 +107,8 @@
                         </form>
                     </div>
 
-                    <!-- Botón de Volver -->
                     <div class="pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-center">
                         <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary fw-semibold d-flex align-items-center justify-content-center gap-2" style="width: 500px;">
-                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_back</span>
                             Volver
                         </a>
                     </div>

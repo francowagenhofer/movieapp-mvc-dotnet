@@ -30,9 +30,27 @@ namespace app_movie_mvc.Controllers
         }
 
         // GET: ReviewController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var review = await _context.Reviews
+                .Include(r => r.Pelicula)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (review == null)
+                return NotFound();
+
+            var vm = new ReviewCreateViewModel
+            {
+                Id = review.Id,
+                PeliculaId = review.PeliculaId,
+                UsuarioId = review.UsuarioId,
+                Rating = review.Rating,
+                Comentario = review.Comentario,
+                PeliculaTitulo = review.Pelicula?.Titulo ?? "Desconocido"
+            };
+
+            return View(vm);
         }
 
         // GET: ReviewController/Create
@@ -116,7 +134,7 @@ namespace app_movie_mvc.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(ReviewCreateViewModel review)
+        public async Task<ActionResult> Edit(ReviewCreateViewModel review, string returnUrl = null)
         {
             try
             {
@@ -142,6 +160,19 @@ namespace app_movie_mvc.Controllers
                 _context.Reviews.Update(reviewExistente);
                 await _context.SaveChangesAsync();
 
+                // Si hay returnUrl, redirigir allí (admin desde Details)
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
+
+                // Si es admin y hay PeliculaId, redirigir a Details
+                if (esAdmin && review.PeliculaId > 0)
+                {
+                    return RedirectToAction("Details", "Home", new { id = review.PeliculaId });
+                }
+
+                // Por defecto, redirigir al Index de Reviews
                 return RedirectToAction(nameof(Index));
             }
             catch

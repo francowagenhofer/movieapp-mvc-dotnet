@@ -1,0 +1,38 @@
+@model ReviewCreateViewModel
+
+<div class="review-container col-12 col-lg-6">
+    <header class="mb-3">
+    </header>
+    <h2 style="text-align: center; margin-bottom:2rem">Detalle de Reseña</h2>
+
+    <article class="review-card ">
+        <div class="review-main mb-3">
+            <div class="review-content">
+                <h4 class="">Pelicula: @Model.PeliculaTitulo</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">Calificación</label>
+
+                    <div id="rating-control" class="d-flex align-items-center gap-2">
+                        <div class="rating-stars d-flex align-items-center" data-max="5" aria-hidden="true">
+                        </div>
+
+                        <div class="review-rating-compact" id="rating-indicator">
+                            <span class="material-symbols-outlined star-filled me-1">star</span>
+                            <span id="rating-number" class="review-rating-number">@Model.Rating</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Comentario</label>
+                    <div class="form-control-plaintext" style="white-space: pre-wrap;">@Model.Comentario</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="review-footer">
+            <a asp-action="Index" class="btn app-btn btn-outline-light">Volver</a>
+        </div>
+    </article>
+</div>  

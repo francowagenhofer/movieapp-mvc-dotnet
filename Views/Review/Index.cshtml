@@ -2,7 +2,7 @@
 @model List<Review>
 
 @{
-    ViewData["Title"] = "Mis Reseñas";
+    ViewData["Title"] = "Reseñas";
 }
 
 <style>
@@ -84,6 +84,11 @@
 
                     </div>
                     <div class="review-footer">
+                        <a asp-action="Details"
+                           asp-route-id="@item.Id"
+                           class="btn btn-sm app-btn app-btn-ghost w-100">
+                            Ver Detalle
+                        </a>
                         <a asp-action="Edit"
                            asp-route-id="@item.Id"
                            class="btn btn-sm app-btn app-btn-ghost w-100">
@@ -145,6 +150,11 @@
                                     </td>
                                     <td class="text-end">
                                         <div class="d-inline-flex gap-2">
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm app-btn app-btn-ghost">
+                                                Ver Detalle
+                                            </a>
                                             <a asp-action="Edit"
                                                asp-route-id="@item.Id"
                                                class="btn btn-sm app-btn app-btn-ghost">

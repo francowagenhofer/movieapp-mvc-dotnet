@@ -1,6 +1,7 @@
 ﻿@model ReviewCreateViewModel
 
 @{
+    var returnUrl = Context.Request.Query["returnUrl"].ToString();
 }
 
 <div class="review-container col-12 col-lg-6">
@@ -12,6 +13,10 @@
         <form asp-controller="Review" asp-action="Edit" method="post">
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="PeliculaId" />
+            @if (!string.IsNullOrEmpty(returnUrl))
+            {
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+            }
 
             <div class="review-main mb-3">
                 <div class="review-content">
@@ -59,7 +64,14 @@
 
             <div class="review-footer">
                 <button type="submit" class="btn app-btn app-btn-ghost">Guardar Cambios</button>
-                <a asp-action="Index" class="btn app-btn btn-outline-danger">Cancelar</a>
+                @if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    <a href="@returnUrl" class="btn app-btn btn-outline-danger">Cancelar</a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn app-btn btn-outline-danger">Cancelar</a>
+                }
             </div>
         </form>
     </article>

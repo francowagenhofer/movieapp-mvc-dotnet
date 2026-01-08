@@ -6,7 +6,7 @@
 @model Pelicula
 
 @{
-    ViewData["Title"] = "Detalles de la Película";
+    ViewData["Title"] = "Detalles";
     if (Model == null)
     {
         <text>Película no encontrada.</text>
@@ -184,9 +184,10 @@
                                             if (UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin").Result)
                                             {
                                                 <div class="detail-review-actions">
-                                                    <a asp-controller="Review"
-                                                       asp-action="Edit"
+                                                    <a asp-controller="Review" 
+                                                       asp-action="Edit" 
                                                        asp-route-id="@item.Id"
+                                                       asp-route-returnUrl="@Url.Action("Details", "Home", new { id = Model.Id })"
                                                        class="detail-review-edit-btn">
                                                         <span class="material-symbols-outlined">edit</span>
                                                         Editar como administrador
