@@ -99,18 +99,5 @@ http://localhost:5000
 
 ---
 
-## 👨‍💻 Autor
-
-**Franco Wagenhöfer**  
-Desarrollador .NET
-
-- **Portafolio:** [francowagenhofer.github.io](https://francowagenhofer.github.io/)
-- **GitHub:** [Franco Wagenhöfer](https://github.com/francowagenhofer)
-- **LinkedIn:** [Franco Wagenhöfer](https://www.linkedin.com/in/franco-wagenh%C3%B6fer/)
-
----
-
-## 📄 Licencia
-
 Proyecto realizado con fines prácticos, de uso libre.
 
